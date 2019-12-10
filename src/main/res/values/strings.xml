@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">WaiterApp</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="button_next">Next</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="error_password">Password must contain at least 8 characters.</string>
+    <string name="table_list_header">Tables</string>
+    <string name="title_activity_menu_list_activity">Menu</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_menu">menu</string>
+    <string name="dishName">Dish Name</string>
+    <string name="quantity">Quantity</string>
+    <string name="add">Add</string>
+    <string name="Send">Send</string>
+    <string name="Cart">cart</string>
+    <string name="showCart">show cart</string>
+    <string name="sum">Sum: </string>
+    <string name="orders"> Active Orders</string>
+</resources>
