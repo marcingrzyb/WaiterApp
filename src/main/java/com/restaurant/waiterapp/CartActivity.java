@@ -61,7 +61,7 @@ public class CartActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
                 else {
-                    cart.deleteItem(new cartItem(msg, true, quantity));
+                    cart.deleteItem(new cartItem(msg, quantity));
                     arrayAdapter.notifyDataSetChanged();
                     dialog.dismiss();
                 }

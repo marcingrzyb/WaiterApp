@@ -4,7 +4,7 @@
     <string name="hint_password">Password</string>
     <string name="button_next">Next</string>
     <string name="button_cancel">Cancel</string>
-    <string name="error_password">Password must contain at least 8 characters.</string>
+    <string name="error_password">Something went wrong.</string>
     <string name="table_list_header">Tables</string>
     <string name="title_activity_menu_list_activity">Menu</string>
     <string name="title_home">Home</string>

@@ -8,6 +8,10 @@ public class FoodResponse implements Serializable {
     private FoodType dishOrDrink;
     private Double price;
 
+    public FoodResponse() {
+        super();
+    }
+
     public FoodResponse(String name, FoodType dishOrDrink, Double price) {
         this.name = name;
         this.dishOrDrink = dishOrDrink;
@@ -36,5 +40,13 @@ public class FoodResponse implements Serializable {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "FoodResponse{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

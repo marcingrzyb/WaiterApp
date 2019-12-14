@@ -16,12 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MenuActivty extends AppCompatActivity {
     ExpandableListView expandableListView;
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
-    HashMap<String, List<String>> expandableListDetail;
+    Map<String, List<String>> expandableListDetail;
     Cart cart = new Cart();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class MenuActivty extends AppCompatActivity {
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         expandableListDetail = ExpandableListDataPump.getData();
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
-        expandableListAdapter = new CustomExpandableListAdapter(this, expandableListTitle, expandableListDetail);
+        expandableListAdapter = new CustomExpandableListAdapter(this, expandableListTitle, (HashMap<String, List<String>>) expandableListDetail);
         expandableListView.setAdapter(expandableListAdapter);
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
@@ -88,7 +89,7 @@ public class MenuActivty extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO: 23.11.2019 edit isFood
-                cart.addItem(new cartItem(msg,true,Integer.parseInt(editTextQuantity.getText().toString())));
+                cart.addItem(new cartItem(msg,Integer.parseInt(editTextQuantity.getText().toString())));
                 dialog.dismiss();
             }
         });
