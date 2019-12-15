@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.restaurant.waiterapp.api.resources.FoodResponse;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +32,8 @@ public class MenuActivty extends AppCompatActivity {
         setContentView(R.layout.menu_activty);
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         expandableListDetail = ExpandableListDataPump.getData();
+        List<FoodResponse> FoodObj=ExpandableListDataPump.getFoodObj();
+        List<FoodResponse> DrinksObj=ExpandableListDataPump.getDrinksObj();
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
         expandableListAdapter = new CustomExpandableListAdapter(this, expandableListTitle, (HashMap<String, List<String>>) expandableListDetail);
         expandableListView.setAdapter(expandableListAdapter);
@@ -60,8 +64,15 @@ public class MenuActivty extends AppCompatActivity {
                                         int groupPosition, int childPosition, long id) {
                 Log.d("group position",Integer.toString(groupPosition));
                 Log.d("child position",Integer.toString(childPosition));
-                String tmp= expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition);
-                showDialog(tmp);
+                //String tmp= expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition);
+                FoodResponse foodTmp;
+                if(childPosition==0){
+                    foodTmp=DrinksObj.get(childPosition-1);
+                }
+                else {
+                    foodTmp = FoodObj.get(childPosition-1);
+                }
+                showDialog(foodTmp);
                 return false;
             }
         });
@@ -73,14 +84,14 @@ public class MenuActivty extends AppCompatActivity {
         startActivity(i);
 
     }
-    public void showDialog(final String msg){
+    public void showDialog(final FoodResponse foodResponse){
         final Dialog dialog = new Dialog(MenuActivty.this);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.add_dialog);
 
 
         TextView editTextDishName = (TextView) dialog.findViewById(R.id.showDishId);
-        editTextDishName.setText(msg);
+        editTextDishName.setText(foodResponse.getName());
 
         final TextView editTextQuantity = (TextView) dialog.findViewById(R.id.editTextQuantity);
 
@@ -89,7 +100,7 @@ public class MenuActivty extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO: 23.11.2019 edit isFood
-                cart.addItem(new cartItem(msg,Integer.parseInt(editTextQuantity.getText().toString())));
+                cart.addItem(new cartItem(foodResponse.getName(),Integer.parseInt(editTextQuantity.getText().toString()),foodResponse.getId()));
                 dialog.dismiss();
             }
         });

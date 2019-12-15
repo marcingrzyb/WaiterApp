@@ -28,9 +28,20 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ExpandableListDataPump {
-    static HashMap<String, List<FoodResponse>> Menu;
-    static AtomicReference<Boolean> asyncFinished = new AtomicReference<>(false);
-    public static HashMap<String, List<String>> getData() {
+    private static HashMap<String, List<FoodResponse>> Menu;
+    private static List<FoodResponse> FoodObj;
+    private static List<FoodResponse> DrinksObj;
+
+    public static List<FoodResponse> getFoodObj() {
+        return FoodObj;
+    }
+
+    public static List<FoodResponse> getDrinksObj() {
+        return DrinksObj;
+    }
+
+    private static AtomicReference<Boolean> asyncFinished = new AtomicReference<>(false);
+    static HashMap<String, List<String>> getData() {
         HashMap<String, List<String>> expandableListDetail = new HashMap<String, List<String>>();
         getMenu("http://10.0.2.2:8080/api/waiter/menu");
         while (!asyncFinished.get()) {
@@ -38,9 +49,9 @@ public class ExpandableListDataPump {
         }
         asyncFinished.set(false);
 
-        List<FoodResponse> FoodObj = Menu.get("DISH");
+        FoodObj = Menu.get("DISH");
         Log.d("food",FoodObj.toString());
-        List<FoodResponse> DrinksObj = Menu.get("DRINK");
+        DrinksObj = Menu.get("DRINK");
         List<String> Food=new ArrayList<>(FoodObj.size());
         for (FoodResponse object : FoodObj) {
             Food.add(object.toString());

@@ -5,10 +5,16 @@ import java.util.Objects;
 
 public class cartItem implements Serializable {
     String productName;
-
     int quantity;
+    Long id;
 
-    public cartItem(String productName,  int quantity) {
+    public cartItem(String productName, int quantity, Long id) {
+        this.productName = productName;
+        this.quantity = quantity;
+        this.id = id;
+    }
+
+    public cartItem(String productName, int quantity) {
         this.productName = productName;
         this.quantity = quantity;
     }
@@ -19,12 +25,13 @@ public class cartItem implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         cartItem cartItem = (cartItem) o;
         return quantity == cartItem.quantity &&
-                Objects.equals(productName, cartItem.productName);
+                Objects.equals(productName, cartItem.productName) &&
+                Objects.equals(id, cartItem.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productName);
+        return Objects.hash(productName, quantity, id);
     }
 
     @Override

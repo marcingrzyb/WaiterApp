@@ -4,18 +4,28 @@ import java.io.Serializable;
 
 public class FoodResponse implements Serializable {
 
+    private Long id;
     private String name;
     private FoodType dishOrDrink;
     private Double price;
+
+    public FoodResponse(Long id, String name, FoodType dishOrDrink, Double price) {
+        this.id = id;
+        this.name = name;
+        this.dishOrDrink = dishOrDrink;
+        this.price = price;
+    }
 
     public FoodResponse() {
         super();
     }
 
-    public FoodResponse(String name, FoodType dishOrDrink, Double price) {
-        this.name = name;
-        this.dishOrDrink = dishOrDrink;
-        this.price = price;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -45,7 +55,9 @@ public class FoodResponse implements Serializable {
     @Override
     public String toString() {
         return "FoodResponse{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dishOrDrink=" + dishOrDrink +
                 ", price=" + price +
                 '}';
     }
