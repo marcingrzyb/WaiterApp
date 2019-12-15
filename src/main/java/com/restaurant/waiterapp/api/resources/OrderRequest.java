@@ -1,8 +1,9 @@
 package com.restaurant.waiterapp.api.resources;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class OrderRequest {
+public class OrderRequest implements Serializable {
     List<Long> dishes;
     List<Long> beverages;
     Long reservationId;

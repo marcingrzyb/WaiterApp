@@ -83,6 +83,7 @@ public class MenuActivty extends AppCompatActivity {
 
         Intent i = new Intent(getBaseContext(), CartActivity.class);
         i.putExtra("Passed cart", cart);
+        i.putExtra("reservationID",getIntent().getIntExtra("reservationID",0));
         startActivity(i);
 
     }

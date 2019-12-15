@@ -2,7 +2,9 @@ package com.restaurant.waiterapp;
 
 
 import android.app.Dialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,6 +15,26 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.restaurant.waiterapp.api.resources.FoodType;
+import com.restaurant.waiterapp.api.resources.OrderRequest;
+
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 public class CartActivity extends AppCompatActivity {
     private ListView lv;
     Cart cart;
@@ -22,7 +44,9 @@ public class CartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
 
         lv = (ListView) findViewById(R.id.cartItemListView);
-        cart= (Cart) getIntent().getSerializableExtra("Passed cart");
+        if(cart==null) {
+            cart = (Cart) getIntent().getSerializableExtra("Passed cart");
+        }
         final ArrayAdapter<cartItem> arrayAdapter = new ArrayAdapter<cartItem>(
                 this,
                 android.R.layout.simple_list_item_1,
@@ -36,7 +60,78 @@ public class CartActivity extends AppCompatActivity {
             }
         });
     }
+    public void onClickSendCart(View view){
+        String orderRequest=prepareOrderRequest(cart);
+        sendOrder("http://10.0.2.2:8080/api/waiter/order",orderRequest);
+    }
+    public String prepareOrderRequest(Cart cart){
+        String jsonOrderRequest="";
+        ArrayList<Long> dishes=new ArrayList<>();
+        ArrayList<Long> beverages=new ArrayList<>();
+        Long reservationId=(long) getIntent().getIntExtra("reservationID", 0);
+        for(cartItem item: cart.getCart()) {
+            if(item.getFoodResponse().getDishOrDrink()== FoodType.DISH){
+                for (int i=0;i<item.quantity;i++) {
+                    dishes.add(item.getFoodResponse().getId());
+                }
+            }
+            else {
+                for (int i=0;i<item.quantity;i++) {
+                    beverages.add(item.getFoodResponse().getId());
+                }
+            }
+        }
+        Log.d("food",dishes.toString());
+        Log.d("drinks",beverages.toString());
+        OrderRequest orderRequest= new OrderRequest(dishes,beverages, reservationId);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            jsonOrderRequest = mapper.writeValueAsString(orderRequest);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return jsonOrderRequest;
+    }
+    public void sendOrder(String url,String orderRequest) {
+        AsyncTask.execute(() -> {
+            URL loginEndpoint;
+            try {
+                loginEndpoint = new URL(url);
+                HttpURLConnection myConnection;
+                myConnection = (HttpURLConnection) loginEndpoint.openConnection();
+                myConnection.setRequestMethod("POST");
+                myConnection.setRequestProperty("Content-Type", "application/json; utf-8");
+                myConnection.setDoOutput(true); //this is to enable writing
+                myConnection.setDoInput(true);  //this is to enable reading
+                try(OutputStream os = myConnection.getOutputStream()) {
+                    byte[] input = orderRequest.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
 
+
+                if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
+                    InputStream responseBody = myConnection.getInputStream();
+                    String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
+                    Log.d("tables", stringResponse);
+                    Toast.makeText(getBaseContext(), "Succes", Toast.LENGTH_LONG).show();
+
+                } else {
+                    // TODO: 12.12.2019
+                    Log.d("status", "lipaSend");
+                    InputStream responseBody = myConnection.getInputStream();
+                    String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
+                    Log.d("sendFailure", stringResponse);
+                    Toast.makeText(getBaseContext(), "Sending Failed", Toast.LENGTH_LONG).show();
+                }
+
+                myConnection.disconnect();
+            } catch (ProtocolException | MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
     public void showDialog(final String msg, final int position, final ArrayAdapter<cartItem> arrayAdapter){
         final Dialog dialog = new Dialog(this);
         dialog.setCancelable(false);
@@ -53,7 +148,6 @@ public class CartActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 23.11.2019 edit isFood
                 int quantity=Integer.parseInt(editTextQuantity.getText().toString());
                 if(quantity>0) {
                     cart.getCart().get(position).quantity=quantity;

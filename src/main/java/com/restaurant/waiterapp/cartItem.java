@@ -23,6 +23,10 @@ public class cartItem implements Serializable {
                 Objects.equals(foodResponse, cartItem.foodResponse);
     }
 
+    public FoodResponse getFoodResponse() {
+        return foodResponse;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(foodResponse, quantity);
@@ -32,6 +36,6 @@ public class cartItem implements Serializable {
     public String toString() {
         return
                 "productName='" + foodResponse.getName() + '\'' +
-                ", quantity=" + quantity;
+                ", quantity=" + quantity+" price: "+quantity*foodResponse.getPrice();
     }
 }
