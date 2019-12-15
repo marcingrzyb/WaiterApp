@@ -31,7 +31,7 @@ public class CartActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Toast.makeText(getBaseContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
-                showDialog(cart.getCart().get(position).productName,position,arrayAdapter);
+                showDialog(cart.getCart().get(position).foodResponse.getName(),position,arrayAdapter);
 
             }
         });
@@ -61,7 +61,7 @@ public class CartActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
                 else {
-                    cart.deleteItem(new cartItem(msg, quantity));
+                    cart.getCart().remove(position);
                     arrayAdapter.notifyDataSetChanged();
                     dialog.dismiss();
                 }

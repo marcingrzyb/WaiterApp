@@ -1,21 +1,16 @@
 package com.restaurant.waiterapp;
 
+import com.restaurant.waiterapp.api.resources.FoodResponse;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public class cartItem implements Serializable {
-    String productName;
+    FoodResponse foodResponse;
     int quantity;
-    Long id;
 
-    public cartItem(String productName, int quantity, Long id) {
-        this.productName = productName;
-        this.quantity = quantity;
-        this.id = id;
-    }
-
-    public cartItem(String productName, int quantity) {
-        this.productName = productName;
+    public cartItem(FoodResponse foodResponse, int quantity) {
+        this.foodResponse = foodResponse;
         this.quantity = quantity;
     }
 
@@ -25,19 +20,18 @@ public class cartItem implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         cartItem cartItem = (cartItem) o;
         return quantity == cartItem.quantity &&
-                Objects.equals(productName, cartItem.productName) &&
-                Objects.equals(id, cartItem.id);
+                Objects.equals(foodResponse, cartItem.foodResponse);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productName, quantity, id);
+        return Objects.hash(foodResponse, quantity);
     }
 
     @Override
     public String toString() {
         return
-                "productName='" + productName + '\'' +
+                "productName='" + foodResponse.getName() + '\'' +
                 ", quantity=" + quantity;
     }
 }

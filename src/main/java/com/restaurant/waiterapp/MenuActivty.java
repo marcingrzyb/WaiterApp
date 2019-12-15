@@ -33,7 +33,9 @@ public class MenuActivty extends AppCompatActivity {
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         expandableListDetail = ExpandableListDataPump.getData();
         List<FoodResponse> FoodObj=ExpandableListDataPump.getFoodObj();
+        Log.d("food",FoodObj.toString());
         List<FoodResponse> DrinksObj=ExpandableListDataPump.getDrinksObj();
+        Log.d("drinks",DrinksObj.toString());
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
         expandableListAdapter = new CustomExpandableListAdapter(this, expandableListTitle, (HashMap<String, List<String>>) expandableListDetail);
         expandableListView.setAdapter(expandableListAdapter);
@@ -66,11 +68,11 @@ public class MenuActivty extends AppCompatActivity {
                 Log.d("child position",Integer.toString(childPosition));
                 //String tmp= expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition);
                 FoodResponse foodTmp;
-                if(childPosition==0){
-                    foodTmp=DrinksObj.get(childPosition-1);
+                if(groupPosition==0){
+                    foodTmp=DrinksObj.get(childPosition);
                 }
                 else {
-                    foodTmp = FoodObj.get(childPosition-1);
+                    foodTmp = FoodObj.get(childPosition);
                 }
                 showDialog(foodTmp);
                 return false;
@@ -99,8 +101,7 @@ public class MenuActivty extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 23.11.2019 edit isFood
-                cart.addItem(new cartItem(foodResponse.getName(),Integer.parseInt(editTextQuantity.getText().toString()),foodResponse.getId()));
+                cart.addItem(new cartItem(foodResponse,Integer.parseInt(editTextQuantity.getText().toString())));
                 dialog.dismiss();
             }
         });
