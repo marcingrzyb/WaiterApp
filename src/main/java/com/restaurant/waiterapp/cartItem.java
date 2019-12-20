@@ -36,6 +36,6 @@ public class cartItem implements Serializable {
     public String toString() {
         return
                 "productName='" + foodResponse.getName() + '\'' +
-                ", quantity=" + quantity+" price: "+quantity*foodResponse.getPrice();
+                ", quantity=" + quantity+", price: "+quantity*foodResponse.getPrice();
     }
 }

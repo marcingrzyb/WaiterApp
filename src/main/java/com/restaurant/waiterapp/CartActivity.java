@@ -12,19 +12,14 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restaurant.waiterapp.api.resources.FoodType;
 import com.restaurant.waiterapp.api.resources.OrderRequest;
-
 import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -32,18 +27,19 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class CartActivity extends AppCompatActivity {
     private ListView lv;
     Cart cart;
+    TextView cartSum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
         lv = (ListView) findViewById(R.id.cartItemListView);
+        cartSum=(TextView) findViewById(R.id.cartSum);
         if(cart==null) {
             cart = (Cart) getIntent().getSerializableExtra("Passed cart");
         }
@@ -59,6 +55,7 @@ public class CartActivity extends AppCompatActivity {
 
             }
         });
+        cartSum.setText(getCartSum(cart));
     }
     public void onClickSendCart(View view){
         String orderRequest=prepareOrderRequest(cart);
@@ -113,7 +110,7 @@ public class CartActivity extends AppCompatActivity {
                     InputStream responseBody = myConnection.getInputStream();
                     String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
                     Log.d("tables", stringResponse);
-                    Toast.makeText(getBaseContext(), "Succes", Toast.LENGTH_LONG).show();
+
 
                 } else {
                     // TODO: 12.12.2019
@@ -121,7 +118,7 @@ public class CartActivity extends AppCompatActivity {
                     InputStream responseBody = myConnection.getInputStream();
                     String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
                     Log.d("sendFailure", stringResponse);
-                    Toast.makeText(getBaseContext(), "Sending Failed", Toast.LENGTH_LONG).show();
+
                 }
 
                 myConnection.disconnect();
@@ -131,6 +128,13 @@ public class CartActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+    }
+    public String getCartSum(Cart cart){
+        Double sum=0.0;
+        for (cartItem item:cart.getCart()) {
+            sum+=item.quantity*item.foodResponse.getPrice();
+        }
+        return sum.toString();
     }
     public void showDialog(final String msg, final int position, final ArrayAdapter<cartItem> arrayAdapter){
         final Dialog dialog = new Dialog(this);
@@ -151,11 +155,13 @@ public class CartActivity extends AppCompatActivity {
                 int quantity=Integer.parseInt(editTextQuantity.getText().toString());
                 if(quantity>0) {
                     cart.getCart().get(position).quantity=quantity;
+                    cartSum.setText(getCartSum(cart));
                     arrayAdapter.notifyDataSetChanged();
                     dialog.dismiss();
                 }
                 else {
                     cart.getCart().remove(position);
+                    cartSum.setText(getCartSum(cart));
                     arrayAdapter.notifyDataSetChanged();
                     dialog.dismiss();
                 }

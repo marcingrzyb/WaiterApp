@@ -6,22 +6,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restaurant.waiterapp.api.resources.OrderResponse;
-import com.restaurant.waiterapp.api.resources.ReservationResponse;
 import com.restaurant.waiterapp.api.resources.TableResponse;
-
 import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -34,7 +27,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
-
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 public class OrdersActivity extends AppCompatActivity {
@@ -135,8 +127,8 @@ public class OrdersActivity extends AppCompatActivity {
                 if (isNotEmpty(table.getTableReservations()) && table.getTableReservations().get(0).getOrderEntity() != null) {
                     OrderResponse order = table.getTableReservations().get(0).getOrderEntity();
                     String waiter = order.getWaiter();
-                    if (Objects.equals(waiter, username)) {
-                        orders.add("Table: " + table.getId().toString() + " " + order.getStage().toString());
+                    if (Objects.equals(waiter, username) && order.getStage()!=null) {
+                        orders.add("Table " + table.getId().toString() + ": " + order.getStage().toString());
                         Log.d("ord",orders.toString());
                     }
                 }

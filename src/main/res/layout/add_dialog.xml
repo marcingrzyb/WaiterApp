@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:theme="@style/Theme.WaiterLogin"
+    android:windowBackground="@color/loginPageBackgroundColor"
     android:orientation="vertical"
     android:padding="15dp">
 
