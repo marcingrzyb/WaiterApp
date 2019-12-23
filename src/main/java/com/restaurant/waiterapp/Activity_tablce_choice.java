@@ -1,5 +1,6 @@
 package com.restaurant.waiterapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,18 +12,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.restaurant.waiterapp.api.resources.TableResponse;
-import org.apache.commons.io.IOUtils;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import com.restaurant.waiterapp.apiConnection.requestsPATCH;
 import java.util.ArrayList;
-import java.util.Objects;
-
-
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 
@@ -37,6 +28,7 @@ public class Activity_tablce_choice extends AppCompatActivity {
         setContentView(R.layout.activity_tablce_choice);
         lv = findViewById(R.id.tableList);
         tables=(ArrayList<TableResponse>)getIntent().getSerializableExtra("tables");
+        Log.d("tables",tables.toString());
         username=getIntent().getStringExtra("username");
         Log.d("username",username);
         final ArrayAdapter<TableResponse> arrayAdapter = new ArrayAdapter<TableResponse>(
@@ -45,15 +37,28 @@ public class Activity_tablce_choice extends AppCompatActivity {
                 tables);
         lv.setAdapter(arrayAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @SuppressLint("StaticFieldLeak")
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Toast.makeText(getBaseContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
                 int reservationid=getReservationId(tables.get(position));
+                Log.d("resid",String.valueOf(reservationid));
                 if (reservationid != -1) {
-                    assignTable("http://10.0.2.2:8080/api/waiter/assign?reservationId="+ reservationid);
-                    Intent i = new Intent(getBaseContext(), MenuActivty.class);
-                    i.putExtra("reservationID", reservationid);
-                    startActivity(i);
-                    finish();
+                    new AsyncTask<String, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(String... strings) {
+                            requestsPATCH.assignTable(strings[0]);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            Intent i = new Intent(getBaseContext(), MenuActivty.class);
+                            i.putExtra("reservationID", reservationid);
+                            startActivity(i);
+                            finish();
+                        }
+                    }.execute("http://10.0.2.2:8080/api/waiter/assign?reservationId="+ reservationid);
                 }else{
                     Toast.makeText(getBaseContext(), "empty reservation", Toast.LENGTH_LONG).show();
                 }
@@ -67,34 +72,4 @@ public class Activity_tablce_choice extends AppCompatActivity {
         }else return -1;
     }
 
-    public void assignTable(String url) {
-        AsyncTask.execute(() -> {
-            URL loginEndpoint;
-            try {
-                loginEndpoint = new URL(url);
-                HttpURLConnection myConnection;
-                myConnection = (HttpURLConnection) loginEndpoint.openConnection();
-                myConnection.setRequestMethod("PATCH");
-
-                if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
-                    InputStream responseBody = myConnection.getInputStream();
-                    String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                    Log.d("tables", stringResponse);
-
-                } else {
-                    // TODO: 12.12.2019
-                    Log.d("status", "lipaAssign");
-                    InputStream responseBody = myConnection.getInputStream();
-                    String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                    Log.d("AssignFailure", stringResponse);
-                }
-
-                myConnection.disconnect();
-            } catch (ProtocolException | MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
 }

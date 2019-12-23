@@ -1,7 +1,9 @@
 package com.restaurant.waiterapp;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,19 +25,34 @@ public class MenuActivty extends AppCompatActivity {
     List<String> expandableListTitle;
     Map<String, List<String>> expandableListDetail;
     Cart cart = new Cart();
+    List<FoodResponse> DrinksObj=new ArrayList<FoodResponse>();
+    List<FoodResponse> FoodObj=new ArrayList<FoodResponse>();
+    @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_activty);
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
-        expandableListDetail = ExpandableListDataPump.getData();
-        List<FoodResponse> FoodObj=ExpandableListDataPump.getFoodObj();
-        Log.d("food",FoodObj.toString());
-        List<FoodResponse> DrinksObj=ExpandableListDataPump.getDrinksObj();
-        Log.d("drinks",DrinksObj.toString());
-        expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
-        expandableListAdapter = new CustomExpandableListAdapter(this, expandableListTitle, (HashMap<String, List<String>>) expandableListDetail);
-        expandableListView.setAdapter(expandableListAdapter);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                expandableListDetail = ExpandableListDataPump.getData();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                FoodObj=ExpandableListDataPump.getFoodObj();
+                Log.d("food",FoodObj.toString());
+                DrinksObj=ExpandableListDataPump.getDrinksObj();
+                Log.d("drinks",DrinksObj.toString());
+                expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
+                expandableListAdapter = new CustomExpandableListAdapter(MenuActivty.this.getBaseContext(), expandableListTitle, (HashMap<String, List<String>>) expandableListDetail);
+                expandableListView.setAdapter(expandableListAdapter);
+            }
+        }.execute();
+
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             @Override

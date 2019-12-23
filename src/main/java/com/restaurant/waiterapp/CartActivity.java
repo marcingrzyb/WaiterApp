@@ -1,6 +1,7 @@
 package com.restaurant.waiterapp;
 
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,22 +18,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restaurant.waiterapp.api.resources.FoodType;
 import com.restaurant.waiterapp.api.resources.OrderRequest;
-import org.apache.commons.io.IOUtils;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import com.restaurant.waiterapp.apiConnection.requestsPOST;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class CartActivity extends AppCompatActivity {
     private ListView lv;
     Cart cart;
     TextView cartSum;
+    Boolean sendOrderResult;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,9 +50,17 @@ public class CartActivity extends AppCompatActivity {
         });
         cartSum.setText(getCartSum(cart));
     }
+    @SuppressLint("StaticFieldLeak")
     public void onClickSendCart(View view){
         String orderRequest=prepareOrderRequest(cart);
-        sendOrder("http://10.0.2.2:8080/api/waiter/order",orderRequest);
+        new AsyncTask<String, Void, Void>() {
+            @Override
+            protected Void doInBackground(String... strings) {
+                sendOrderResult=requestsPOST.sendOrder(strings[0],strings[1]);
+                return null;
+            }
+        }.execute("http://10.0.2.2:8080/api/waiter/order",orderRequest);
+
     }
     public String prepareOrderRequest(Cart cart){
         String jsonOrderRequest="";
@@ -89,46 +90,7 @@ public class CartActivity extends AppCompatActivity {
         }
         return jsonOrderRequest;
     }
-    public void sendOrder(String url,String orderRequest) {
-        AsyncTask.execute(() -> {
-            URL loginEndpoint;
-            try {
-                loginEndpoint = new URL(url);
-                HttpURLConnection myConnection;
-                myConnection = (HttpURLConnection) loginEndpoint.openConnection();
-                myConnection.setRequestMethod("POST");
-                myConnection.setRequestProperty("Content-Type", "application/json; utf-8");
-                myConnection.setDoOutput(true); //this is to enable writing
-                myConnection.setDoInput(true);  //this is to enable reading
-                try(OutputStream os = myConnection.getOutputStream()) {
-                    byte[] input = orderRequest.getBytes("utf-8");
-                    os.write(input, 0, input.length);
-                }
 
-
-                if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
-                    InputStream responseBody = myConnection.getInputStream();
-                    String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                    Log.d("tables", stringResponse);
-
-
-                } else {
-                    // TODO: 12.12.2019
-                    Log.d("status", "lipaSend");
-                    InputStream responseBody = myConnection.getInputStream();
-                    String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                    Log.d("sendFailure", stringResponse);
-
-                }
-
-                myConnection.disconnect();
-            } catch (ProtocolException | MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
     public String getCartSum(Cart cart){
         Double sum=0.0;
         for (cartItem item:cart.getCart()) {
