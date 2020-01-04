@@ -60,7 +60,7 @@ public class RateActivity extends AppCompatActivity {
                 result= requestsPOST.sendFeedback(strings[0], strings[1]);
                 return null;
             }
-        }.execute("http://10.0.2.2:8080/api/waiter/clientFeedback/",feedbackPojo);
+        }.execute("http://10.0.2.2:8080/api/waiter/clientFeedback",feedbackPojo);
         finish();
     }
 

@@ -92,6 +92,7 @@ public class requestsPOST {
             myConnection = (HttpURLConnection) loginEndpoint.openConnection();
             myConnection.setRequestMethod("POST");
             myConnection.setRequestProperty("Content-Type", "application/json; utf-8");
+            myConnection.setRequestProperty("Accept", "application/json");
             myConnection.setDoOutput(true); //this is to enable writing
             myConnection.setDoInput(true);  //this is to enable reading
             try(OutputStream os = myConnection.getOutputStream()) {
@@ -100,10 +101,11 @@ public class requestsPOST {
             }catch (Exception e){
                 e.printStackTrace();
             }
+            Log.d("status",String.valueOf(Objects.requireNonNull(myConnection).getResponseCode()));
             if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
                 InputStream responseBody = myConnection.getInputStream();
                 String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                Log.d("tables", stringResponse);
+                Log.d("response", stringResponse);
                 result=true;
                 Log.d("rezult",result.toString());
             } else {
