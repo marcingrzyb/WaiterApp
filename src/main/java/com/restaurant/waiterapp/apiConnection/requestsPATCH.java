@@ -16,30 +16,60 @@ import java.util.Objects;
 
 public class requestsPATCH {
     public static void assignTable(String url) {
-            URL loginEndpoint;
-            try {
-                loginEndpoint = new URL(url);
-                HttpURLConnection myConnection;
-                myConnection = (HttpURLConnection) loginEndpoint.openConnection();
-                myConnection.setRequestMethod("PATCH");
-                if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
-                    InputStream responseBody = myConnection.getInputStream();
-                    String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                    Log.d("tables", stringResponse);
+        URL loginEndpoint;
+        try {
+            loginEndpoint = new URL(url);
+            HttpURLConnection myConnection;
+            myConnection = (HttpURLConnection) loginEndpoint.openConnection();
+            myConnection.setRequestMethod("PATCH");
+            if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
+                InputStream responseBody = myConnection.getInputStream();
+                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
+                Log.d("tables", stringResponse);
 
-                } else {
-                    // TODO: 12.12.2019
-                    Log.d("status", "lipaAssign");
-                    InputStream responseBody = myConnection.getInputStream();
-                    String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                    Log.d("AssignFailure", stringResponse);
-                }
-
-                myConnection.disconnect();
-            } catch (ProtocolException | MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else {
+                // TODO: 12.12.2019
+                Log.d("status", "lipaAssign");
+                InputStream responseBody = myConnection.getInputStream();
+                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
+                Log.d("AssignFailure", stringResponse);
             }
+
+            myConnection.disconnect();
+        } catch (ProtocolException | MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+    public static Boolean finalizeOrder(String url) {
+        Boolean result=false;
+        URL loginEndpoint;
+        try {
+            loginEndpoint = new URL(url);
+            HttpURLConnection myConnection;
+            myConnection = (HttpURLConnection) loginEndpoint.openConnection();
+            myConnection.setRequestMethod("PATCH");
+            if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
+                InputStream responseBody = myConnection.getInputStream();
+                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
+                Log.d("tables", stringResponse);
+                result=true;
+
+            } else {
+                // TODO: 12.12.2019
+                Log.d("status", "lipaFinalize");
+                InputStream responseBody = myConnection.getInputStream();
+                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
+                Log.d("finalizeFailure", stringResponse);
+            }
+            myConnection.disconnect();
+        } catch (ProtocolException | MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 }

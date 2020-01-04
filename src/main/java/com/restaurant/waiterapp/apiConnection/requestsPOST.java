@@ -83,4 +83,44 @@ public class requestsPOST {
             }
         return result;
     }
+    public static Boolean sendFeedback(String url, String feedback) {
+        URL loginEndpoint;
+        Boolean result=false;
+        try {
+            loginEndpoint = new URL(url);
+            HttpURLConnection myConnection;
+            myConnection = (HttpURLConnection) loginEndpoint.openConnection();
+            myConnection.setRequestMethod("POST");
+            myConnection.setRequestProperty("Content-Type", "application/json; utf-8");
+            myConnection.setDoOutput(true); //this is to enable writing
+            myConnection.setDoInput(true);  //this is to enable reading
+            try(OutputStream os = myConnection.getOutputStream()) {
+                byte[] input = feedback.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
+                InputStream responseBody = myConnection.getInputStream();
+                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
+                Log.d("tables", stringResponse);
+                result=true;
+                Log.d("rezult",result.toString());
+            } else {
+                // TODO: 12.12.2019
+                Log.d("status", "lipaSend");
+                InputStream responseBody = myConnection.getInputStream();
+                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
+                Log.d("sendFailure", stringResponse);
+
+            }
+
+            myConnection.disconnect();
+        } catch (ProtocolException | MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

@@ -21,6 +21,12 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="?android:attr/listDivider" />
+
         <TextView
             android:id="@+id/textView7"
             android:layout_width="match_parent"
@@ -28,11 +34,23 @@
             android:text="Service Rating"
             android:textSize="20sp"/>
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="?android:attr/listDivider" />
+
         <com.hsalf.smilerating.SmileRating
             android:id="@+id/smile_rating_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:showLine="true" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="?android:attr/listDivider" />
 
         <TextView
             android:id="@+id/textView8"
@@ -41,11 +59,23 @@
             android:text="Beverage Rating"
             android:textSize="20sp"/>
 
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="?android:attr/listDivider" />
+
         <com.hsalf.smilerating.SmileRating
             android:id="@+id/smile_rating_beverage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:showLine="true" />
+
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="?android:attr/listDivider" />
 
         <TextView
             android:id="@+id/textView9"
@@ -53,6 +83,12 @@
             android:layout_height="wrap_content"
             android:text="Dish Rating"
             android:textSize="20sp"/>
+
+        <View
+            android:id="@+id/divider6"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="?android:attr/listDivider" />
 
         <com.hsalf.smilerating.SmileRating
             android:id="@+id/smile_rating_dish"
@@ -68,11 +104,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/skipFeedbackBtn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onClickSkipFeedback"
             android:text="skip"
             android:theme="@style/Theme.WaiterLogin" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/sendFeedbackBtn"
             android:layout_width="match_parent"

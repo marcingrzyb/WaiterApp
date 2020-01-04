@@ -7,24 +7,31 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.restaurant.waiterapp.api.resources.OrderResponse;
 import com.restaurant.waiterapp.api.resources.TableResponse;
+import com.restaurant.waiterapp.apiConnection.requestsGET;
+
 import java.util.ArrayList;
 import java.util.Objects;
+
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
-import com.restaurant.waiterapp.apiConnection.requestsGET;
 
 public class OrdersActivity extends AppCompatActivity {
     ListView lv;
     ArrayList<TableResponse> tables = new ArrayList<>();
     String username;
     ArrayList<String> orders=new ArrayList<>();
+    ArrayList<OrderResponse> ordersObj=new ArrayList<>();
     ArrayAdapter<String> arrayAdapter;
-    String requestURL="http://10.0.2.2:8080/api/waiter/tables";
+    String requestURLgetOrders="http://10.0.2.2:8080/api/waiter/tables";
     @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +58,7 @@ public class OrdersActivity extends AppCompatActivity {
                 tables=requestsGET.getTables(strings[0]);
                 return null;
             }
-        }.execute(requestURL);
+        }.execute(requestURLgetOrders);
 
         SwipeRefresher.setOnRefreshListener(
                 () -> new AsyncTask<String, Void, Void>() {
@@ -70,8 +77,19 @@ public class OrdersActivity extends AppCompatActivity {
                         Log.d("refresh","refreshed");
                         SwipeRefresher.setRefreshing(false);
                     }
-                }.execute(requestURL));
+                }.execute(requestURLgetOrders));
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                Toast.makeText(getBaseContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
+                Long orderid=ordersObj.get(position).getId();
+                if(orderid!=null) {
+                    Intent i = new Intent(getBaseContext(), RateActivity.class);
+                    i.putExtra("orderid", orderid.toString());
+                    startActivity(i);
                 }
+            }
+        });
+    }
     public void onClickOpenTable(View view){
         Intent i = new Intent(getBaseContext(), Activity_tablce_choice.class);
         i.putExtra("username",username);
@@ -89,6 +107,7 @@ public class OrdersActivity extends AppCompatActivity {
                     String waiter = order.getWaiter();
                     if (Objects.equals(waiter, username) && order.getStage()!=null) {
                         orders.add("Table " + table.getId().toString() + ": " + order.getStage().toString());
+                        ordersObj.add(order);
                         Log.d("ord",orders.toString());
                     }
                 }
