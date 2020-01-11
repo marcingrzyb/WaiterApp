@@ -9,22 +9,26 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.restaurant.waiterapp.api.resources.FoodType;
 import com.restaurant.waiterapp.api.resources.OrderRequest;
-import com.restaurant.waiterapp.apiconnection.RequestsPOST;
+import com.restaurant.waiterapp.apiconnection.RequestsPost;
+
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CartActivity extends AppCompatActivity {
-
+    private static final Logger LOGGER = Logger.getLogger( CartActivity.class.getName() );
     Cart cart;
     TextView cartSum;
     Boolean sendOrderResult;
@@ -44,12 +48,10 @@ public class CartActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1,
                 cart.getCart() );
         lv.setAdapter(arrayAdapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(getBaseContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
-                showDialog(cart.getCart().get(position).foodResponse.getName(),position,arrayAdapter);
+        lv.setOnItemClickListener((parent, v, position, id) -> {
+            Toast.makeText(getBaseContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
+            showDialog(cart.getCart().get(position).foodResponse.getName(),position,arrayAdapter);
 
-            }
         });
         cartSum.setText(getCartSum(cart));
     }
@@ -59,7 +61,7 @@ public class CartActivity extends AppCompatActivity {
         new AsyncTask<String, Void, Void>() {
             @Override
             protected Void doInBackground(String... strings) {
-                sendOrderResult= RequestsPOST.sendOrder(strings[0],strings[1]);
+                sendOrderResult= RequestsPost.sendPost(strings[0],strings[1]);
                 return null;
             }
         }.execute("http://10.0.2.2:8080/api/waiter/order",orderRequest);
@@ -89,7 +91,7 @@ public class CartActivity extends AppCompatActivity {
         try {
             jsonOrderRequest = mapper.writeValueAsString(orderRequest);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString());
         }
         return jsonOrderRequest;
     }
@@ -140,33 +142,25 @@ public class CartActivity extends AppCompatActivity {
 
             }
         });
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int quantity=Integer.parseInt(editTextQuantity.getText().toString());
-                if(quantity>0) {
-                    cart.getCart().get(position).quantity=quantity;
-                    cartSum.setText(getCartSum(cart));
-                    arrayAdapter.notifyDataSetChanged();
-                    dialog.dismiss();
-                }
-                else {
-                    cart.getCart().remove(position);
-                    cartSum.setText(getCartSum(cart));
-                    arrayAdapter.notifyDataSetChanged();
-                    dialog.dismiss();
-                }
+        addButton.setOnClickListener(v -> {
+            int quantity=Integer.parseInt(editTextQuantity.getText().toString());
+            if(quantity>0) {
+                cart.getCart().get(position).quantity=quantity;
+                cartSum.setText(getCartSum(cart));
+                arrayAdapter.notifyDataSetChanged();
+                dialog.dismiss();
             }
-        });
-
-
-        Button cancelAddingButton = (Button) dialog.findViewById(R.id.cancelAddingButton);
-        cancelAddingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            else {
+                cart.getCart().remove(position);
+                cartSum.setText(getCartSum(cart));
+                arrayAdapter.notifyDataSetChanged();
                 dialog.dismiss();
             }
         });
+
+
+        Button cancelAddingButton = dialog.findViewById(R.id.cancelAddingButton);
+        cancelAddingButton.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
 
     }

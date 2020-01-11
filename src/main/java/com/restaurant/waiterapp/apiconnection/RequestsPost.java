@@ -11,9 +11,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class RequestsPOST {
-    private RequestsPOST() {
+public class RequestsPost {
+    private static final Logger LOGGER = Logger.getLogger( RequestsPost.class.getName() );
+    private RequestsPost() {
     }
 
     public static Boolean getSession(String url){
@@ -34,44 +37,12 @@ public class RequestsPOST {
             }
             myConnection.disconnect();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString());
         }
         return result;
     }
 
-    public static Boolean sendOrder(String url, String orderRequest) {
-            URL loginEndpoint;
-            Boolean result=false;
-            try {
-                loginEndpoint = new URL(url);
-                HttpURLConnection myConnection;
-                myConnection = (HttpURLConnection) loginEndpoint.openConnection();
-                myConnection.setRequestMethod("POST");
-                myConnection.setRequestProperty("Content-Type", "application/json; utf-8");
-                myConnection.setDoOutput(true); //this is to enable writing
-                myConnection.setDoInput(true);  //this is to enable reading
-                writeToOutputStream(orderRequest, myConnection);
-                if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
-                    InputStream responseBody = myConnection.getInputStream();
-                    String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                    Log.d("tables", stringResponse);
-                    result=true;
-                    Log.d("rezult",result.toString());
-                } else {
-                    Log.d("statusNegative", "lipaSend");
-                    InputStream responseBody = myConnection.getInputStream();
-                    String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                    Log.d("sendFailure", stringResponse);
-
-                }
-
-                myConnection.disconnect();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        return result;
-    }
-    public static Boolean sendFeedback(String url, String feedback) {
+    public static Boolean sendPost(String url, String stringRequest) {
         URL loginEndpoint;
         Boolean result=false;
         try {
@@ -83,7 +54,7 @@ public class RequestsPOST {
             myConnection.setRequestProperty("Accept", "application/json");
             myConnection.setDoOutput(true); //this is to enable writing
             myConnection.setDoInput(true);  //this is to enable reading
-            writeToOutputStream(feedback, myConnection);
+            writeToOutputStream(stringRequest, myConnection);
             Log.d("status",String.valueOf(Objects.requireNonNull(myConnection).getResponseCode()));
             if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
                 InputStream responseBody = myConnection.getInputStream();
@@ -102,7 +73,7 @@ public class RequestsPOST {
 
             myConnection.disconnect();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString());
         }
         return result;
     }
@@ -112,7 +83,7 @@ public class RequestsPOST {
             byte[] input = feedback.getBytes(StandardCharsets.UTF_8);
             os.write(input, 0, input.length);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString());
         }
     }
 }

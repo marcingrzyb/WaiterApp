@@ -34,7 +34,7 @@ public class MenuActivty extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_activty);
-        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
+        expandableListView = findViewById(R.id.expandableListView);
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -55,42 +55,25 @@ public class MenuActivty extends AppCompatActivity {
             }
         }.execute();
 
-        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+        expandableListView.setOnGroupExpandListener(groupPosition -> Toast.makeText(getApplicationContext(),
+                expandableListTitle.get(groupPosition) + " List Expanded.",
+                Toast.LENGTH_SHORT).show());
 
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        expandableListTitle.get(groupPosition) + " List Expanded.",
-                        Toast.LENGTH_SHORT).show();
+        expandableListView.setOnGroupCollapseListener(groupPosition -> Toast.makeText(getApplicationContext(),
+                expandableListTitle.get(groupPosition) + " List Collapsed.",
+                Toast.LENGTH_SHORT).show());
+        expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            Log.d("group position",Integer.toString(groupPosition));
+            Log.d("child position",Integer.toString(childPosition));
+            FoodResponse foodTmp;
+            if(groupPosition==0){
+                foodTmp= drinksObj.get(childPosition);
             }
-        });
-
-        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        expandableListTitle.get(groupPosition) + " List Collapsed.",
-                        Toast.LENGTH_SHORT).show();
-
+            else {
+                foodTmp = foodObj.get(childPosition);
             }
-        });
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                Log.d("group position",Integer.toString(groupPosition));
-                Log.d("child position",Integer.toString(childPosition));
-                FoodResponse foodTmp;
-                if(groupPosition==0){
-                    foodTmp= drinksObj.get(childPosition);
-                }
-                else {
-                    foodTmp = foodObj.get(childPosition);
-                }
-                showDialog(foodTmp);
-                return false;
-            }
+            showDialog(foodTmp);
+            return false;
         });
     }
     public void onClickShowCart(View v){
@@ -139,22 +122,14 @@ public class MenuActivty extends AppCompatActivity {
 
             }
         });
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cart.addItem(new CartItem(foodResponse,Integer.parseInt(editTextQuantity.getText().toString())));
-                dialog.dismiss();
-            }
+        addButton.setOnClickListener(v -> {
+            cart.addItem(new CartItem(foodResponse,Integer.parseInt(editTextQuantity.getText().toString())));
+            dialog.dismiss();
         });
 
 
         Button cancelAddingButton = dialog.findViewById(R.id.cancelAddingButton);
-        cancelAddingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        cancelAddingButton.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
 
     }

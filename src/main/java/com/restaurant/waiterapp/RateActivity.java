@@ -16,11 +16,14 @@ import com.hsalf.smilerating.SmileRating;
 import com.restaurant.waiterapp.api.resources.FeedbackEnum;
 import com.restaurant.waiterapp.api.resources.FeedbackPojo;
 import com.restaurant.waiterapp.apiconnection.RequestsPatch;
-import com.restaurant.waiterapp.apiconnection.RequestsPOST;
+import com.restaurant.waiterapp.apiconnection.RequestsPost;
 
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RateActivity extends AppCompatActivity {
+    private static final Logger LOGGER = Logger.getLogger( RateActivity.class.getName() );
     Long orderid;
     SmileRating beverage;
     SmileRating dish;
@@ -57,7 +60,7 @@ public class RateActivity extends AppCompatActivity {
             }
             @Override
             protected Void doInBackground(String... strings) {
-                result= RequestsPOST.sendFeedback(strings[0], strings[1]);
+                result= RequestsPost.sendPost(strings[0], strings[1]);
                 return null;
             }
         }.execute("http://10.0.2.2:8080/api/waiter/clientFeedback",feedbackPojo);
@@ -82,7 +85,7 @@ public class RateActivity extends AppCompatActivity {
             }
             @Override
             protected Void doInBackground(String... strings) {
-                result= RequestsPatch.finalizeOrder(strings[0]);
+                result= RequestsPatch.patchRequest(strings[0]);
                 return null;
             }
         }.execute("http://10.0.2.2:8080/api/waiter/finalize?orderId="+orderid.toString());
@@ -95,7 +98,7 @@ public class RateActivity extends AppCompatActivity {
         try {
             jsonOrderRequest = mapper.writeValueAsString(feedbackPojo);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString());
         }
         return jsonOrderRequest;
     }

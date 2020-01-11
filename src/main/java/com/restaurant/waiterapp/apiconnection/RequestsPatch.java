@@ -10,36 +10,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RequestsPatch {
+    private static final Logger LOGGER = Logger.getLogger( RequestsPatch.class.getName() );
     private RequestsPatch() {
     }
-
-    public static void assignTable(String url) {
-        URL loginEndpoint;
-        try {
-            loginEndpoint = new URL(url);
-            HttpURLConnection myConnection;
-            myConnection = (HttpURLConnection) loginEndpoint.openConnection();
-            myConnection.setRequestMethod("PATCH");
-            if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
-                InputStream responseBody = myConnection.getInputStream();
-                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                Log.d("tables", stringResponse);
-
-            } else {
-                Log.d("status", "lipaAssign");
-                InputStream responseBody = myConnection.getInputStream();
-                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                Log.d("AssignFailure", stringResponse);
-            }
-
-            myConnection.disconnect();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static boolean finalizeOrder(String url) {
+    public static boolean patchRequest(String url) {
         boolean result=false;
         URL loginEndpoint;
         try {
@@ -54,14 +32,14 @@ public class RequestsPatch {
                 result=true;
 
             } else {
-                Log.d("status", "lipaFinalize");
+                Log.d("status", "lipa");
                 InputStream responseBody = myConnection.getInputStream();
                 String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                Log.d("finalizeFailure", stringResponse);
+                Log.d("Failure", stringResponse);
             }
             myConnection.disconnect();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString());
         }
         return result;
     }

@@ -5,15 +5,17 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.restaurant.waiterapp.api.resources.TableResponse;
 import com.restaurant.waiterapp.apiconnection.RequestsPatch;
+
 import java.util.ArrayList;
+
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 
@@ -22,6 +24,7 @@ public class ActivityTableChoice extends AppCompatActivity {
     ArrayList<TableResponse> tables = new ArrayList<>();
     String username;
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,9 +39,7 @@ public class ActivityTableChoice extends AppCompatActivity {
                 android.R.layout.simple_list_item_1,
                 tables);
         lv.setAdapter(arrayAdapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @SuppressLint("StaticFieldLeak")
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+        lv.setOnItemClickListener((parent, v, position, id) -> {
                 Toast.makeText(getBaseContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
                 int reservationid=getReservationId(tables.get(position));
                 Log.d("resid",String.valueOf(reservationid));
@@ -46,7 +47,7 @@ public class ActivityTableChoice extends AppCompatActivity {
                     new AsyncTask<String, Void, Void>() {
                         @Override
                         protected Void doInBackground(String... strings) {
-                            RequestsPatch.assignTable(strings[0]);
+                            RequestsPatch.patchRequest(strings[0]);
                             return null;
                         }
 
@@ -62,7 +63,7 @@ public class ActivityTableChoice extends AppCompatActivity {
                 }else{
                     Toast.makeText(getBaseContext(), "empty reservation", Toast.LENGTH_LONG).show();
                 }
-            }
+
         });
     }
 

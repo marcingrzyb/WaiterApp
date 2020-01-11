@@ -21,8 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RequestsGet {
+    private static final Logger LOGGER = Logger.getLogger( RequestsGet.class.getName() );
     private RequestsGet() {
     }
 
@@ -44,7 +47,7 @@ public class RequestsGet {
             myConnection.disconnect();
             tables=parseJsonTables(result);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString());
         }
         return tables ;
     }
@@ -66,7 +69,7 @@ public class RequestsGet {
             }
             myConnection.disconnect();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString());
         }
         return parsed;
     }

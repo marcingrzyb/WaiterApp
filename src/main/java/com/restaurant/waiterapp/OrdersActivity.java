@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -79,15 +78,13 @@ public class OrdersActivity extends AppCompatActivity {
                         swipeRefresher.setRefreshing(false);
                     }
                 }.execute(requestURLgetOrders));
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(getBaseContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
-                Long orderid=ordersObj.get(position).getId();
-                if(orderid!=null) {
-                    Intent i = new Intent(getBaseContext(), RateActivity.class);
-                    i.putExtra("orderid", orderid.toString());
-                    startActivity(i);
-                }
+        lv.setOnItemClickListener((parent, v, position, id) -> {
+            Toast.makeText(getBaseContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
+            Long orderid=ordersObj.get(position).getId();
+            if(orderid!=null) {
+                Intent i = new Intent(getBaseContext(), RateActivity.class);
+                i.putExtra("orderid", orderid.toString());
+                startActivity(i);
             }
         });
     }
