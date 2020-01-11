@@ -1,5 +1,6 @@
 package com.restaurant.waiterapp.api.resources;
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -62,7 +63,7 @@ public class TableResponse implements Serializable, Parcelable {
 
     protected TableResponse(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.tableReservations = new ArrayList<ReservationResponse>();
+        this.tableReservations = new ArrayList<>();
         in.readList(this.tableReservations, ReservationResponse.class.getClassLoader());
     }
 

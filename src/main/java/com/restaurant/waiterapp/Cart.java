@@ -2,27 +2,28 @@ package com.restaurant.waiterapp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Cart implements Serializable {
-    private ArrayList<cartItem> CartList;
+    private List<CartItem> cartList;
 
     public Cart() {
-        CartList=new ArrayList<>();
+        cartList=new ArrayList<>();
     }
 
-    public Cart(ArrayList<cartItem> cart) {
-        CartList = cart;
+    public Cart(List<CartItem> cart) {
+        cartList = cart;
     }
 
-    public void addItem(cartItem item) {
-        CartList.add(item);
+    public void addItem(CartItem item) {
+        cartList.add(item);
     }
 
-    public void deleteItem(cartItem item){
-        CartList.remove(item);
+    public void deleteItem(CartItem item){
+        cartList.remove(item);
     }
 
-    public ArrayList<cartItem> getCart() {
-        return CartList;
+    public List<CartItem> getCart() {
+        return cartList;
     }
 }

@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrderResponse implements Serializable, Parcelable {
 
@@ -116,9 +115,9 @@ public class OrderResponse implements Serializable, Parcelable {
         this.waiter = in.readString();
         this.chef = in.readString();
         this.bartender = in.readString();
-        this.dishes = new ArrayList<FoodResponse>();
+        this.dishes = new ArrayList<>();
         in.readList(this.dishes, FoodResponse.class.getClassLoader());
-        this.beverages = new ArrayList<FoodResponse>();
+        this.beverages = new ArrayList<>();
         in.readList(this.beverages, FoodResponse.class.getClassLoader());
         int tmpStage = in.readInt();
         this.stage = tmpStage == -1 ? null : StageEnum.values()[tmpStage];

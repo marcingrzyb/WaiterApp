@@ -9,7 +9,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.restaurant.waiterapp.apiConnection.requestsPOST;
+import com.restaurant.waiterapp.apiconnection.RequestsPOST;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.util.concurrent.atomic.AtomicReference;
@@ -33,7 +33,7 @@ public class LoginFragment extends AppCompatActivity {
         new AsyncTask<String, Void, Void>() {
             @Override
             protected Void doInBackground(String... strings) {
-                sessionGot.set(requestsPOST.getSession(strings[0]));
+                sessionGot.set(RequestsPOST.getSession(strings[0]));
                 Log.d("resulta", sessionGot.get().toString());
                 return null;
             }

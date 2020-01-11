@@ -5,40 +5,43 @@ import com.restaurant.waiterapp.api.resources.FoodResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static com.restaurant.waiterapp.apiConnection.requestsGET.getMenu;
+import static com.restaurant.waiterapp.apiconnection.RequestsGet.getMenu;
 
 public class ExpandableListDataPump {
-    private static HashMap<String, List<FoodResponse>> Menu;
-    private static List<FoodResponse> FoodObj;
-    private static List<FoodResponse> DrinksObj;
+    private static List<FoodResponse> foodObj;
+    private static List<FoodResponse> drinksObj;
+
+    private ExpandableListDataPump() {
+    }
 
     public static List<FoodResponse> getFoodObj() {
-        return FoodObj;
+        return foodObj;
     }
 
     public static List<FoodResponse> getDrinksObj() {
-        return DrinksObj;
+        return drinksObj;
     }
 
-    static HashMap<String, List<String>> getData() {
-        HashMap<String, List<String>> expandableListDetail = new HashMap<String, List<String>>();
+    static Map<String, List<String>> getData() {
+        Map<String, List<String>> expandableListDetail = new HashMap<>();
 
-        Menu=getMenu("http://10.0.2.2:8080/api/waiter/menu");
+        Map<String, List<FoodResponse>> menu = getMenu("http://10.0.2.2:8080/api/waiter/menu");
 
-        FoodObj = Menu.get("DISH");
-        Log.d("food",FoodObj.toString());
-        DrinksObj = Menu.get("DRINK");
-        List<String> Food=new ArrayList<>(FoodObj.size());
-        for (FoodResponse object : FoodObj) {
-            Food.add(object.toString());
+        foodObj = menu.get("DISH");
+        Log.d("food", foodObj.toString());
+        drinksObj = menu.get("DRINK");
+        List<String> food=new ArrayList<>(foodObj.size());
+        for (FoodResponse object : foodObj) {
+            food.add(object.toString());
         }
-        List<String> Drinks=new ArrayList<>(DrinksObj.size());
-        for (FoodResponse object : DrinksObj) {
-            Drinks.add(object.toString());
+        List<String> drinks=new ArrayList<>(drinksObj.size());
+        for (FoodResponse object : drinksObj) {
+            drinks.add(object.toString());
         }
-        expandableListDetail.put("Food", Food);
-        expandableListDetail.put("Drinks", Drinks);
+        expandableListDetail.put("Food", food);
+        expandableListDetail.put("Drinks", drinks);
         return expandableListDetail;
     }
 }

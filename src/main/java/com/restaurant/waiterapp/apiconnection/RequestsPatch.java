@@ -1,6 +1,5 @@
-package com.restaurant.waiterapp.apiConnection;
+package com.restaurant.waiterapp.apiconnection;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.commons.io.IOUtils;
@@ -8,13 +7,14 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-public class requestsPATCH {
+public class RequestsPatch {
+    private RequestsPatch() {
+    }
+
     public static void assignTable(String url) {
         URL loginEndpoint;
         try {
@@ -28,7 +28,6 @@ public class requestsPATCH {
                 Log.d("tables", stringResponse);
 
             } else {
-                // TODO: 12.12.2019
                 Log.d("status", "lipaAssign");
                 InputStream responseBody = myConnection.getInputStream();
                 String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
@@ -36,14 +35,12 @@ public class requestsPATCH {
             }
 
             myConnection.disconnect();
-        } catch (ProtocolException | MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static Boolean finalizeOrder(String url) {
-        Boolean result=false;
+    public static boolean finalizeOrder(String url) {
+        boolean result=false;
         URL loginEndpoint;
         try {
             loginEndpoint = new URL(url);
@@ -57,15 +54,12 @@ public class requestsPATCH {
                 result=true;
 
             } else {
-                // TODO: 12.12.2019
                 Log.d("status", "lipaFinalize");
                 InputStream responseBody = myConnection.getInputStream();
                 String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
                 Log.d("finalizeFailure", stringResponse);
             }
             myConnection.disconnect();
-        } catch (ProtocolException | MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

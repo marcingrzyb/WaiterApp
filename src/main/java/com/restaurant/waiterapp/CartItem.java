@@ -5,11 +5,11 @@ import com.restaurant.waiterapp.api.resources.FoodResponse;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class cartItem implements Serializable {
+public class CartItem implements Serializable {
     FoodResponse foodResponse;
     int quantity;
 
-    public cartItem(FoodResponse foodResponse, int quantity) {
+    public CartItem(FoodResponse foodResponse, int quantity) {
         this.foodResponse = foodResponse;
         this.quantity = quantity;
     }
@@ -18,7 +18,7 @@ public class cartItem implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        cartItem cartItem = (cartItem) o;
+        CartItem cartItem = (CartItem) o;
         return quantity == cartItem.quantity &&
                 Objects.equals(foodResponse, cartItem.foodResponse);
     }

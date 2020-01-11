@@ -15,8 +15,8 @@ import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
 import com.restaurant.waiterapp.api.resources.FeedbackEnum;
 import com.restaurant.waiterapp.api.resources.FeedbackPojo;
-import com.restaurant.waiterapp.apiConnection.requestsPATCH;
-import com.restaurant.waiterapp.apiConnection.requestsPOST;
+import com.restaurant.waiterapp.apiconnection.RequestsPatch;
+import com.restaurant.waiterapp.apiconnection.RequestsPOST;
 
 import java.util.Objects;
 
@@ -43,11 +43,11 @@ public class RateActivity extends AppCompatActivity {
         String feedbackPojo=prepareRequest(dish.getRating(),beverage.getRating(),service.getRating(),orderid);
         Log.d("pojo",feedbackPojo);
         new AsyncTask<String, Void, Void>() {
-            Boolean result=false;
+            boolean result=false;
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                Log.d("result",result.toString());
+                Log.d("result",String.valueOf(result));
                 if (result){
                     Toast.makeText(getBaseContext(), "Feedback sent", Toast.LENGTH_SHORT).show();
                 }
@@ -57,7 +57,7 @@ public class RateActivity extends AppCompatActivity {
             }
             @Override
             protected Void doInBackground(String... strings) {
-                result= requestsPOST.sendFeedback(strings[0], strings[1]);
+                result= RequestsPOST.sendFeedback(strings[0], strings[1]);
                 return null;
             }
         }.execute("http://10.0.2.2:8080/api/waiter/clientFeedback",feedbackPojo);
@@ -67,11 +67,11 @@ public class RateActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public void onClickSkipFeedback(View view) {
         new AsyncTask<String, Void, Void>() {
-            Boolean result=false;
+            boolean result=false;
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                Log.d("result",result.toString());
+                Log.d("result",String.valueOf(result));
                 Log.d("orderid",orderid.toString());
                 if (result){
                     Toast.makeText(getBaseContext(), "Finalized", Toast.LENGTH_SHORT).show();
@@ -82,7 +82,7 @@ public class RateActivity extends AppCompatActivity {
             }
             @Override
             protected Void doInBackground(String... strings) {
-                result= requestsPATCH.finalizeOrder(strings[0]);
+                result= RequestsPatch.finalizeOrder(strings[0]);
                 return null;
             }
         }.execute("http://10.0.2.2:8080/api/waiter/finalize?orderId="+orderid.toString());

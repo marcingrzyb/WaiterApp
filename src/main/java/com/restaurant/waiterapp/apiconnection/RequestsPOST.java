@@ -1,6 +1,5 @@
-package com.restaurant.waiterapp.apiConnection;
+package com.restaurant.waiterapp.apiconnection;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.commons.io.IOUtils;
@@ -9,13 +8,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-public class requestsPOST {
+public class RequestsPOST {
+    private RequestsPOST() {
+    }
 
     public static Boolean getSession(String url){
        Boolean result=false;
@@ -31,12 +30,9 @@ public class requestsPOST {
                 Log.d("cook",response);
                 result=true;
             } else {
-                result=false;
                 Log.d("resultfail",result.toString());
             }
             myConnection.disconnect();
-        } catch (ProtocolException | MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,12 +50,7 @@ public class requestsPOST {
                 myConnection.setRequestProperty("Content-Type", "application/json; utf-8");
                 myConnection.setDoOutput(true); //this is to enable writing
                 myConnection.setDoInput(true);  //this is to enable reading
-                try(OutputStream os = myConnection.getOutputStream()) {
-                    byte[] input = orderRequest.getBytes(StandardCharsets.UTF_8);
-                    os.write(input, 0, input.length);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                writeToOutputStream(orderRequest, myConnection);
                 if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
                     InputStream responseBody = myConnection.getInputStream();
                     String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
@@ -67,8 +58,7 @@ public class requestsPOST {
                     result=true;
                     Log.d("rezult",result.toString());
                 } else {
-                    // TODO: 12.12.2019
-                    Log.d("status", "lipaSend");
+                    Log.d("statusNegative", "lipaSend");
                     InputStream responseBody = myConnection.getInputStream();
                     String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
                     Log.d("sendFailure", stringResponse);
@@ -76,9 +66,7 @@ public class requestsPOST {
                 }
 
                 myConnection.disconnect();
-            } catch (ProtocolException | MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         return result;
@@ -95,12 +83,7 @@ public class requestsPOST {
             myConnection.setRequestProperty("Accept", "application/json");
             myConnection.setDoOutput(true); //this is to enable writing
             myConnection.setDoInput(true);  //this is to enable reading
-            try(OutputStream os = myConnection.getOutputStream()) {
-                byte[] input = feedback.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+            writeToOutputStream(feedback, myConnection);
             Log.d("status",String.valueOf(Objects.requireNonNull(myConnection).getResponseCode()));
             if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
                 InputStream responseBody = myConnection.getInputStream();
@@ -109,7 +92,7 @@ public class requestsPOST {
                 result=true;
                 Log.d("rezult",result.toString());
             } else {
-                // TODO: 12.12.2019
+
                 Log.d("status", "lipaSend");
                 InputStream responseBody = myConnection.getInputStream();
                 String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
@@ -118,11 +101,18 @@ public class requestsPOST {
             }
 
             myConnection.disconnect();
-        } catch (ProtocolException | MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return result;
+    }
+
+    private static void writeToOutputStream(String feedback, HttpURLConnection myConnection) {
+        try (OutputStream os = myConnection.getOutputStream()) {
+            byte[] input = feedback.getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

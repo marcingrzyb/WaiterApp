@@ -12,12 +12,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.restaurant.waiterapp.api.resources.TableResponse;
-import com.restaurant.waiterapp.apiConnection.requestsPATCH;
+import com.restaurant.waiterapp.apiconnection.RequestsPatch;
 import java.util.ArrayList;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 
-public class Activity_tablce_choice extends AppCompatActivity {
+public class ActivityTableChoice extends AppCompatActivity {
     ListView lv;
     ArrayList<TableResponse> tables = new ArrayList<>();
     String username;
@@ -31,8 +31,8 @@ public class Activity_tablce_choice extends AppCompatActivity {
         Log.d("tables",tables.toString());
         username=getIntent().getStringExtra("username");
         Log.d("username",username);
-        final ArrayAdapter<TableResponse> arrayAdapter = new ArrayAdapter<TableResponse>(
-                Activity_tablce_choice.this,
+        final ArrayAdapter<TableResponse> arrayAdapter = new ArrayAdapter<>(
+                ActivityTableChoice.this,
                 android.R.layout.simple_list_item_1,
                 tables);
         lv.setAdapter(arrayAdapter);
@@ -46,7 +46,7 @@ public class Activity_tablce_choice extends AppCompatActivity {
                     new AsyncTask<String, Void, Void>() {
                         @Override
                         protected Void doInBackground(String... strings) {
-                            requestsPATCH.assignTable(strings[0]);
+                            RequestsPatch.assignTable(strings[0]);
                             return null;
                         }
 

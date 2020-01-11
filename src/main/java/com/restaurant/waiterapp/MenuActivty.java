@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +27,8 @@ public class MenuActivty extends AppCompatActivity {
     List<String> expandableListTitle;
     Map<String, List<String>> expandableListDetail;
     Cart cart = new Cart();
-    List<FoodResponse> DrinksObj=new ArrayList<FoodResponse>();
-    List<FoodResponse> FoodObj=new ArrayList<FoodResponse>();
+    List<FoodResponse> drinksObj =new ArrayList<>();
+    List<FoodResponse> foodObj =new ArrayList<>();
     @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +45,11 @@ public class MenuActivty extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                FoodObj=ExpandableListDataPump.getFoodObj();
-                Log.d("food",FoodObj.toString());
-                DrinksObj=ExpandableListDataPump.getDrinksObj();
-                Log.d("drinks",DrinksObj.toString());
-                expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
+                foodObj =ExpandableListDataPump.getFoodObj();
+                Log.d("food", foodObj.toString());
+                drinksObj =ExpandableListDataPump.getDrinksObj();
+                Log.d("drinks", drinksObj.toString());
+                expandableListTitle = new ArrayList<>(expandableListDetail.keySet());
                 expandableListAdapter = new CustomExpandableListAdapter(MenuActivty.this.getBaseContext(), expandableListTitle, (HashMap<String, List<String>>) expandableListDetail);
                 expandableListView.setAdapter(expandableListAdapter);
             }
@@ -73,20 +75,18 @@ public class MenuActivty extends AppCompatActivity {
 
             }
         });
-        // TODO: 23.11.2019
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
                 Log.d("group position",Integer.toString(groupPosition));
                 Log.d("child position",Integer.toString(childPosition));
-                //String tmp= expandableListDetail.get(expandableListTitle.get(groupPosition)).get(childPosition);
                 FoodResponse foodTmp;
                 if(groupPosition==0){
-                    foodTmp=DrinksObj.get(childPosition);
+                    foodTmp= drinksObj.get(childPosition);
                 }
                 else {
-                    foodTmp = FoodObj.get(childPosition);
+                    foodTmp = foodObj.get(childPosition);
                 }
                 showDialog(foodTmp);
                 return false;
@@ -107,22 +107,48 @@ public class MenuActivty extends AppCompatActivity {
         dialog.setContentView(R.layout.add_dialog);
 
 
-        TextView editTextDishName = (TextView) dialog.findViewById(R.id.showDishId);
+        TextView editTextDishName = dialog.findViewById(R.id.showDishId);
         editTextDishName.setText(foodResponse.getName());
 
-        final TextView editTextQuantity = (TextView) dialog.findViewById(R.id.editTextQuantity);
+        final TextView editTextQuantity = dialog.findViewById(R.id.editTextQuantity);
 
-        Button addButton = (Button) dialog.findViewById(R.id.addButton);
+        Button addButton = dialog.findViewById(R.id.addButton);
+        addButton.setEnabled(false);
+        editTextQuantity.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //not neccesery
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+                //not neccesery
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(!s.toString().matches("^\\d+$")){
+                    addButton.setEnabled(false);
+                }
+                else{
+                    addButton.setEnabled(true);
+                }
+
+            }
+        });
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cart.addItem(new cartItem(foodResponse,Integer.parseInt(editTextQuantity.getText().toString())));
+                cart.addItem(new CartItem(foodResponse,Integer.parseInt(editTextQuantity.getText().toString())));
                 dialog.dismiss();
             }
         });
 
 
-        Button cancelAddingButton = (Button) dialog.findViewById(R.id.cancelAddingButton);
+        Button cancelAddingButton = dialog.findViewById(R.id.cancelAddingButton);
         cancelAddingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

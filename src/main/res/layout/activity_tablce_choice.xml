@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/Theme.WaiterLogin"
-    tools:context=".Activity_tablce_choice">
+    tools:context=".ActivityTableChoice">
 
     <TextView
         android:id="@+id/textView5"

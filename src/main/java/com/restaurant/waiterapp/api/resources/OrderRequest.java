@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 public class OrderRequest implements Serializable {
-    List<Long> dishes;
-    List<Long> beverages;
+    private List<Long> dishes;
+    private List<Long> beverages;
     Long reservationId;
 
     public OrderRequest(List<Long> dishes, List<Long> beverages, Long tableId) {

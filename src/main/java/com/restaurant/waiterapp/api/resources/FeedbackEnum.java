@@ -15,7 +15,7 @@ public enum FeedbackEnum {
         return grade;
     }
 
-    private static final Map<Integer,FeedbackEnum  > _map = new HashMap<Integer, FeedbackEnum >();
+    private static final Map<Integer,FeedbackEnum  > _map = new HashMap<>();
     static
     {
         for (FeedbackEnum  feedbackEnum  : FeedbackEnum.values())
