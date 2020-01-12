@@ -40,7 +40,9 @@ public class OrdersActivity extends AppCompatActivity {
         lv = findViewById(R.id.ordersListView);
         SwipeRefreshLayout swipeRefresher = findViewById(R.id.swiperefresh);
         Bundle extras=getIntent().getExtras();
-        username=extras.getString("username");
+        if (extras != null) {
+            username=extras.getString("username");
+        }
         Log.d("user",username);
         new AsyncTask<String, Void, Void>() {
             @Override

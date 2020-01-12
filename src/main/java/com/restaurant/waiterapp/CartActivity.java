@@ -68,7 +68,6 @@ public class CartActivity extends AppCompatActivity {
 
     }
     public String prepareOrderRequest(Cart cart){
-        String jsonOrderRequest="";
         ArrayList<Long> dishes=new ArrayList<>();
         ArrayList<Long> beverages=new ArrayList<>();
         Long reservationId=(long) getIntent().getIntExtra("reservationID", 0);
@@ -87,6 +86,11 @@ public class CartActivity extends AppCompatActivity {
         Log.d("food",dishes.toString());
         Log.d("drinks",beverages.toString());
         OrderRequest orderRequest= new OrderRequest(dishes,beverages, reservationId);
+        return getOrderJson(orderRequest);
+    }
+
+    private String getOrderJson(OrderRequest orderRequest) {
+        String jsonOrderRequest="";
         ObjectMapper mapper = new ObjectMapper();
         try {
             jsonOrderRequest = mapper.writeValueAsString(orderRequest);

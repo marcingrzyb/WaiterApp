@@ -43,10 +43,7 @@ public class TableResponse implements Serializable, Parcelable {
         if(isNotEmpty(tableReservations)&& tableReservations.get(0).getOrderEntity()!=null){
             waiter=tableReservations.get(0).getOrderEntity().getWaiter();
         }
-        return "TableResponse{" +
-                "id=" + id +
-                ", tableReservations=" + waiter+
-                '}';
+        return "Table: "+ id + ", waiter: "+ waiter;
     }
 
 
