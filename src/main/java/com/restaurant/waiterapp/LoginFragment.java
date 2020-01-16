@@ -27,6 +27,7 @@ public class LoginFragment extends AppCompatActivity {
     }
     @SuppressLint("StaticFieldLeak")
     public void onClickButtonNext(View view) {
+        //triggered after using Button
         final TextInputLayout passwordTextInput = findViewById(R.id.password_text_input);
         final TextInputEditText passwordEditText = findViewById(R.id.password_edit_text);
         final TextInputEditText username = findViewById(R.id.username);

@@ -3,6 +3,7 @@ package com.restaurant.waiterapp;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -31,7 +32,7 @@ public class CartActivity extends AppCompatActivity {
     private static final Logger LOGGER = Logger.getLogger( CartActivity.class.getName() );
     Cart cart;
     TextView cartSum;
-    Boolean sendOrderResult;
+    boolean sendOrderResult;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ListView lv;
@@ -57,6 +58,7 @@ public class CartActivity extends AppCompatActivity {
     }
     @SuppressLint("StaticFieldLeak")
     public void onClickSendCart(View view){
+        //triggered after using Button
         String orderRequest=prepareOrderRequest(cart);
         new AsyncTask<String, Void, Void>() {
             @Override
@@ -64,10 +66,26 @@ public class CartActivity extends AppCompatActivity {
                 sendOrderResult= RequestsPost.sendPost(strings[0],strings[1]);
                 return null;
             }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                if(sendOrderResult){
+                    Toast.makeText(getBaseContext(), "Sending Successful", Toast.LENGTH_LONG).show();
+                    Intent openMainActivity = new Intent(CartActivity.this, OrdersActivity.class);
+                    openMainActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivityIfNeeded(openMainActivity, 0);
+                    finish();
+
+                }
+                else{
+                    Toast.makeText(getBaseContext(), "Sending failed Try Again", Toast.LENGTH_LONG).show();
+                }
+            }
         }.execute("http://10.0.2.2:8080/api/waiter/order",orderRequest);
 
     }
     public String prepareOrderRequest(Cart cart){
+        //prepares data sent through request
         ArrayList<Long> dishes=new ArrayList<>();
         ArrayList<Long> beverages=new ArrayList<>();
         Long reservationId=(long) getIntent().getIntExtra("reservationID", 0);
@@ -90,6 +108,7 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private String getOrderJson(OrderRequest orderRequest) {
+        //parse order request to Json
         String jsonOrderRequest="";
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -101,13 +120,14 @@ public class CartActivity extends AppCompatActivity {
     }
 
     public String getCartSum(Cart cart){
-        Double sum=0.0;
+        double sum=0.0;
         for (CartItem item:cart.getCart()) {
             sum+=item.quantity*item.foodResponse.getPrice();
         }
-        return sum.toString();
+        return String.valueOf(sum);
     }
     public void showDialog(final String msg, final int position, final ArrayAdapter<CartItem> arrayAdapter){
+        //Displays dialog that allows to edit cart item
         final Dialog dialog = new Dialog(this);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.add_dialog);

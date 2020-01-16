@@ -77,7 +77,7 @@ public class MenuActivty extends AppCompatActivity {
         });
     }
     public void onClickShowCart(View v){
-
+        //triggered after using Button
         Intent i = new Intent(getBaseContext(), CartActivity.class);
         i.putExtra("Passed cart", cart);
         i.putExtra("reservationID",getIntent().getIntExtra("reservationID",0));
@@ -85,6 +85,7 @@ public class MenuActivty extends AppCompatActivity {
 
     }
     public void showDialog(final FoodResponse foodResponse){
+        //Displays Dialog window that allows adding item to Cart
         final Dialog dialog = new Dialog(MenuActivty.this);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.add_dialog);

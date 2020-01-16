@@ -20,6 +20,7 @@ public class RequestsPost {
     }
 
     public static Boolean getSession(String url){
+        //builds and sends request which authorizes session
        Boolean result=false;
         URL loginEndpoint;
         try {
@@ -43,6 +44,7 @@ public class RequestsPost {
     }
 
     public static Boolean sendPost(String url, String stringRequest) {
+        //builds and sends Post request
         URL loginEndpoint;
         Boolean result=false;
         try {
@@ -79,6 +81,7 @@ public class RequestsPost {
     }
 
     private static void writeToOutputStream(String feedback, HttpURLConnection myConnection) {
+        //writes data to Output Stream
         try (OutputStream os = myConnection.getOutputStream()) {
             byte[] input = feedback.getBytes(StandardCharsets.UTF_8);
             os.write(input, 0, input.length);

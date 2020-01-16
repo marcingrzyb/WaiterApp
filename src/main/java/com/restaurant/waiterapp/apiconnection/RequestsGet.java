@@ -30,6 +30,7 @@ public class RequestsGet {
     }
 
     public static List<TableResponse> getTables(String url) {
+        //builds and sends request which gets List of Tables
         URL loginEndpoint;
         String result="error";
         List<TableResponse> tables = null;
@@ -52,6 +53,7 @@ public class RequestsGet {
         return tables ;
     }
     public static Map<String, List<FoodResponse>> getMenu(String url) {
+        //builds and sends request which gets Menu
         URL loginEndpoint;
         Map<String, List<FoodResponse>> parsed=new HashMap<>();
         try {

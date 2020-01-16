@@ -43,6 +43,7 @@ public class RateActivity extends AppCompatActivity {
 
     @SuppressLint("StaticFieldLeak")
     public void onClickSendFeedback(View view) {
+        //triggered after using Button
         String feedbackPojo=prepareRequest(dish.getRating(),beverage.getRating(),service.getRating(),orderid);
         Log.d("pojo",feedbackPojo);
         new AsyncTask<String, Void, Void>() {
@@ -53,9 +54,10 @@ public class RateActivity extends AppCompatActivity {
                 Log.d("result",String.valueOf(result));
                 if (result){
                     Toast.makeText(getBaseContext(), "Feedback sent", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
                 else {
-                    Toast.makeText(getBaseContext(), "Error while sending feedback", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Error while sending feedback, Try again", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -64,11 +66,12 @@ public class RateActivity extends AppCompatActivity {
                 return null;
             }
         }.execute("http://10.0.2.2:8080/api/waiter/clientFeedback",feedbackPojo);
-        finish();
+
     }
 
     @SuppressLint("StaticFieldLeak")
     public void onClickSkipFeedback(View view) {
+        //triggered after using Button
         new AsyncTask<String, Void, Void>() {
             boolean result=false;
             @Override
@@ -78,9 +81,10 @@ public class RateActivity extends AppCompatActivity {
                 Log.d("orderid",orderid.toString());
                 if (result){
                     Toast.makeText(getBaseContext(), "Finalized", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
                 else {
-                    Toast.makeText(getBaseContext(), "Error while finalizing", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Error while finalizing, Try again", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -89,9 +93,10 @@ public class RateActivity extends AppCompatActivity {
                 return null;
             }
         }.execute("http://10.0.2.2:8080/api/waiter/finalize?orderId="+orderid.toString());
-        finish();
+
     }
     String prepareRequest(int dish,int bevarage,int service,Long orderid){
+        //prepares Json that contains feedback data
         String jsonOrderRequest="";
         FeedbackPojo feedbackPojo=new FeedbackPojo(FeedbackEnum.fromInt(service),FeedbackEnum.fromInt(bevarage),FeedbackEnum.fromInt(dish),orderid);
         ObjectMapper mapper = new ObjectMapper();

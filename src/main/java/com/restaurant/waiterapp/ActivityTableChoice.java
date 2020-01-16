@@ -31,7 +31,9 @@ public class ActivityTableChoice extends AppCompatActivity {
         setContentView(R.layout.activity_tablce_choice);
         lv = findViewById(R.id.tableList);
         tables=(ArrayList<TableResponse>)getIntent().getSerializableExtra("tables");
-        Log.d("tables",tables.toString());
+        if (tables != null) {
+            Log.d("tables",tables.toString());
+        }
         username=getIntent().getStringExtra("username");
         Log.d("username",username);
         final ArrayAdapter<TableResponse> arrayAdapter = new ArrayAdapter<>(
@@ -40,7 +42,6 @@ public class ActivityTableChoice extends AppCompatActivity {
                 tables);
         lv.setAdapter(arrayAdapter);
         lv.setOnItemClickListener((parent, v, position, id) -> {
-                Toast.makeText(getBaseContext(), String.valueOf(position), Toast.LENGTH_LONG).show();
                 int reservationid=getReservationId(tables.get(position));
                 Log.d("resid",String.valueOf(reservationid));
                 if (reservationid != -1) {
@@ -68,6 +69,7 @@ public class ActivityTableChoice extends AppCompatActivity {
     }
 
     protected int getReservationId(TableResponse table) {
+        //extracts reservation that is closest to actual hour
         if(isNotEmpty(table.getTableReservations())) {
             return Integer.parseInt(table.getTableReservations().get(0).getId().toString());
         }else return -1;

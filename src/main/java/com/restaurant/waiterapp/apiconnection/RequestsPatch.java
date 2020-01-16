@@ -18,6 +18,7 @@ public class RequestsPatch {
     private RequestsPatch() {
     }
     public static boolean patchRequest(String url) {
+        //builds and sends Patch request
         boolean result=false;
         URL loginEndpoint;
         try {
