@@ -14,11 +14,10 @@ import com.restaurant.waiterapp.apiconnection.RequestsPost;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Objects;
 
 
 public class LoginFragment extends AppCompatActivity {
-    AtomicReference<Boolean> sessionGot= new AtomicReference<>(false);
     CookieManager cookieManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,27 +33,28 @@ public class LoginFragment extends AppCompatActivity {
         final TextInputEditText passwordEditText = findViewById(R.id.password_edit_text);
         final TextInputEditText username = findViewById(R.id.username);
         new AsyncTask<String, Void, Void>() {
+            boolean sessionGot=false;
             @Override
             protected Void doInBackground(String... strings) {
-                sessionGot.set(RequestsPost.getSession(strings[0]));
+                sessionGot=RequestsPost.getSession(strings[0]);
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                if (!sessionGot.get()) {
+                if (!sessionGot) {
                     passwordTextInput.setError(getString(R.string.error_password));
                 } else {
                     passwordTextInput.setError(null); // Clear the error
                     Intent i = new Intent(getBaseContext(), OrdersActivity.class);
-                    i.putExtra("username",username.getText().toString());
+                    i.putExtra("username", Objects.requireNonNull(username.getText()).toString());
                     startActivity(i);
                     finish();
                 }
             }
 
-        }.execute("http://10.0.2.2:8080/login?username="+username.getText().toString()+"&password="+ passwordEditText.getText().toString());
+        }.execute("http://10.0.2.2:8080/login?username="+ Objects.requireNonNull(username.getText()).toString()+"&password="+ Objects.requireNonNull(passwordEditText.getText()).toString());
 
     }
 
