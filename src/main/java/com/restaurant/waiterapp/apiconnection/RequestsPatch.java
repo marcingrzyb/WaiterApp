@@ -1,14 +1,8 @@
 package com.restaurant.waiterapp.apiconnection;
 
-import android.util.Log;
-
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,16 +21,7 @@ public class RequestsPatch {
             myConnection = (HttpURLConnection) loginEndpoint.openConnection();
             myConnection.setRequestMethod("PATCH");
             if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
-                InputStream responseBody = myConnection.getInputStream();
-                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                Log.d("tables", stringResponse);
                 result=true;
-
-            } else {
-                Log.d("status", "lipa");
-                InputStream responseBody = myConnection.getInputStream();
-                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                Log.d("Failure", stringResponse);
             }
             myConnection.disconnect();
         } catch (IOException e) {

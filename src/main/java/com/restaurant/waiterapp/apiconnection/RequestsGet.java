@@ -41,9 +41,7 @@ public class RequestsGet {
             myConnection.setRequestMethod("GET");
             if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
                 InputStream responseBody = myConnection.getInputStream();
-                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                Log.d("tables", stringResponse);
-                result=stringResponse;
+                result = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
             }
             myConnection.disconnect();
             tables=parseJsonTables(result);
@@ -66,8 +64,6 @@ public class RequestsGet {
                 String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
                 Log.d("menu", stringResponse);
                 parsed=parseJsonMenu(stringResponse);
-            } else {
-                Log.d("status", "lipa");
             }
             myConnection.disconnect();
         } catch (IOException e) {
@@ -78,9 +74,7 @@ public class RequestsGet {
 
     public static Map<String, List<FoodResponse>> parseJsonMenu(String jsonString) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        HashMap<String, List<FoodResponse>> ppl2 = mapper.readValue(jsonString,new TypeReference<HashMap<String, List<FoodResponse>>>() {});
-        Log.d("mapa",ppl2.toString());
-        return ppl2;
+        return mapper.readValue(jsonString,new TypeReference<HashMap<String, List<FoodResponse>>>() {});
 
     }
 

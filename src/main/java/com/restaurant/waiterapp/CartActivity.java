@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -101,8 +100,6 @@ public class CartActivity extends AppCompatActivity {
                 }
             }
         }
-        Log.d("food",dishes.toString());
-        Log.d("drinks",beverages.toString());
         OrderRequest orderRequest= new OrderRequest(dishes,beverages, reservationId);
         return getOrderJson(orderRequest);
     }

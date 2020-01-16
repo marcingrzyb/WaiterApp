@@ -3,7 +3,6 @@ package com.restaurant.waiterapp;
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -45,13 +44,11 @@ public class RateActivity extends AppCompatActivity {
     public void onClickSendFeedback(View view) {
         //triggered after using Button
         String feedbackPojo=prepareRequest(dish.getRating(),beverage.getRating(),service.getRating(),orderid);
-        Log.d("pojo",feedbackPojo);
         new AsyncTask<String, Void, Void>() {
             boolean result=false;
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                Log.d("result",String.valueOf(result));
                 if (result){
                     Toast.makeText(getBaseContext(), "Feedback sent", Toast.LENGTH_SHORT).show();
                     finish();
@@ -77,8 +74,6 @@ public class RateActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                Log.d("result",String.valueOf(result));
-                Log.d("orderid",orderid.toString());
                 if (result){
                     Toast.makeText(getBaseContext(), "Finalized", Toast.LENGTH_SHORT).show();
                     finish();

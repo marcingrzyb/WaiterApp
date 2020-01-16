@@ -15,7 +15,6 @@
         android:theme="@style/Theme.WaiterLogin"
         android:usesCleartextTraffic="true">
         <activity android:name=".RateActivity"></activity>
-        <activity android:name=".CreateFeedback" />
         <activity android:name=".ActivityTableChoice" />
         <activity android:name=".OrdersActivity" />
         <activity android:name=".CartActivity" />

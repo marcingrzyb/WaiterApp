@@ -7,15 +7,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.restaurant.waiterapp.api.resources.FoodResponse;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,25 +47,14 @@ public class MenuActivty extends AppCompatActivity {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 foodObj =ExpandableListDataPump.getFoodObj();
-                Log.d("food", foodObj.toString());
                 drinksObj =ExpandableListDataPump.getDrinksObj();
-                Log.d("drinks", drinksObj.toString());
                 expandableListTitle = new ArrayList<>(expandableListDetail.keySet());
                 expandableListAdapter = new CustomExpandableListAdapter(MenuActivty.this.getBaseContext(), expandableListTitle, (HashMap<String, List<String>>) expandableListDetail);
                 expandableListView.setAdapter(expandableListAdapter);
             }
         }.execute();
 
-        expandableListView.setOnGroupExpandListener(groupPosition -> Toast.makeText(getApplicationContext(),
-                expandableListTitle.get(groupPosition) + " List Expanded.",
-                Toast.LENGTH_SHORT).show());
-
-        expandableListView.setOnGroupCollapseListener(groupPosition -> Toast.makeText(getApplicationContext(),
-                expandableListTitle.get(groupPosition) + " List Collapsed.",
-                Toast.LENGTH_SHORT).show());
         expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-            Log.d("group position",Integer.toString(groupPosition));
-            Log.d("child position",Integer.toString(childPosition));
             FoodResponse foodTmp;
             if(groupPosition==0){
                 foodTmp= drinksObj.get(childPosition);

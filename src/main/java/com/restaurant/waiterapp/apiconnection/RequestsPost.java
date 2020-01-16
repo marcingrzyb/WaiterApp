@@ -1,11 +1,6 @@
 package com.restaurant.waiterapp.apiconnection;
 
-import android.util.Log;
-
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,12 +24,7 @@ public class RequestsPost {
             myConnection=(HttpURLConnection) loginEndpoint.openConnection();
             myConnection.setRequestMethod("POST");
             if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
-                InputStream responseBody = myConnection.getInputStream();
-                String response=(IOUtils.toString(responseBody, StandardCharsets.UTF_8));
-                Log.d("cook",response);
                 result=true;
-            } else {
-                Log.d("resultfail",result.toString());
             }
             myConnection.disconnect();
         } catch (IOException e) {
@@ -57,22 +47,9 @@ public class RequestsPost {
             myConnection.setDoOutput(true); //this is to enable writing
             myConnection.setDoInput(true);  //this is to enable reading
             writeToOutputStream(stringRequest, myConnection);
-            Log.d("status",String.valueOf(Objects.requireNonNull(myConnection).getResponseCode()));
             if (Objects.requireNonNull(myConnection).getResponseCode() == 200) {
-                InputStream responseBody = myConnection.getInputStream();
-                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                Log.d("response", stringResponse);
                 result=true;
-                Log.d("rezult",result.toString());
-            } else {
-
-                Log.d("status", "lipaSend");
-                InputStream responseBody = myConnection.getInputStream();
-                String stringResponse = IOUtils.toString(responseBody, StandardCharsets.UTF_8);
-                Log.d("sendFailure", stringResponse);
-
             }
-
             myConnection.disconnect();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.toString());

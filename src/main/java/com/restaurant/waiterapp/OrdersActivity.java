@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -42,7 +41,6 @@ public class OrdersActivity extends AppCompatActivity {
         if (extras != null) {
             username=extras.getString("username");
         }
-        Log.d("user",username);
         new AsyncTask<String, Void, Void>() {
             @Override
             protected void onPostExecute(Void aVoid) {
@@ -75,13 +73,11 @@ public class OrdersActivity extends AppCompatActivity {
                         arrayAdapter.clear();
                         arrayAdapter.addAll(orders);
                         arrayAdapter.notifyDataSetChanged();
-                        Log.d("refresh","refreshed");
                         swipeRefresher.setRefreshing(false);
                     }
                 }.execute(requestURLgetOrders));
         lv.setOnItemClickListener((parent, v, position, id) -> {
             Long orderid=ordersObj.get(position).getId();
-            Log.d("orderid", String.valueOf(orderid));
             if(orderid!=null) {
                 Intent i = new Intent(getBaseContext(), RateActivity.class);
                 i.putExtra("orderid", orderid.toString());
@@ -106,7 +102,6 @@ public class OrdersActivity extends AppCompatActivity {
                 arrayAdapter.clear();
                 arrayAdapter.addAll(orders);
                 arrayAdapter.notifyDataSetChanged();
-                Log.d("refresh","refreshed");
             }
         }.execute(requestURLgetOrders);
 
@@ -125,14 +120,12 @@ public class OrdersActivity extends AppCompatActivity {
         ordersObj=new ArrayList<>();
         if(tables!=null) {
             for (TableResponse table : tables) {
-                Log.d("loop","looping");
                 if (isNotEmpty(table.getTableReservations()) && table.getTableReservations().get(0).getOrderEntity() != null) {
                     OrderResponse order = table.getTableReservations().get(0).getOrderEntity();
                     String waiter = order.getWaiter();
                     if (Objects.equals(waiter, username) && order.getStage()!=null) {
                         ordersResult.add("Table " + table.getId().toString() + ": " + order.getStage().toString());
                         ordersObj.add(order);
-                        Log.d("ord",ordersResult.toString());
                     }
                 }
             }

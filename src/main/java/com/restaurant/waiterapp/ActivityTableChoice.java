@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -31,11 +30,7 @@ public class ActivityTableChoice extends AppCompatActivity {
         setContentView(R.layout.activity_tablce_choice);
         lv = findViewById(R.id.tableList);
         tables=(ArrayList<TableResponse>)getIntent().getSerializableExtra("tables");
-        if (tables != null) {
-            Log.d("tables",tables.toString());
-        }
         username=getIntent().getStringExtra("username");
-        Log.d("username",username);
         final ArrayAdapter<TableResponse> arrayAdapter = new ArrayAdapter<>(
                 ActivityTableChoice.this,
                 android.R.layout.simple_list_item_1,
@@ -43,7 +38,6 @@ public class ActivityTableChoice extends AppCompatActivity {
         lv.setAdapter(arrayAdapter);
         lv.setOnItemClickListener((parent, v, position, id) -> {
                 int reservationid=getReservationId(tables.get(position));
-                Log.d("resid",String.valueOf(reservationid));
                 if (reservationid != -1) {
                     new AsyncTask<String, Void, Void>() {
                         @Override

@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.restaurant.waiterapp.apiconnection.RequestsPost;
+
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.util.concurrent.atomic.AtomicReference;
@@ -35,7 +37,6 @@ public class LoginFragment extends AppCompatActivity {
             @Override
             protected Void doInBackground(String... strings) {
                 sessionGot.set(RequestsPost.getSession(strings[0]));
-                Log.d("resulta", sessionGot.get().toString());
                 return null;
             }
 
