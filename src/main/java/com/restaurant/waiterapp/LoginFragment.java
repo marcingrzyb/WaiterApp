@@ -14,7 +14,6 @@ import com.restaurant.waiterapp.apiconnection.RequestsPost;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
-import java.util.Objects;
 
 
 public class LoginFragment extends AppCompatActivity {
@@ -32,6 +31,7 @@ public class LoginFragment extends AppCompatActivity {
         final TextInputLayout passwordTextInput = findViewById(R.id.password_text_input);
         final TextInputEditText passwordEditText = findViewById(R.id.password_edit_text);
         final TextInputEditText username = findViewById(R.id.username);
+        // TODO: 17.01.2020 disable button if password or nickname is null
         new AsyncTask<String, Void, Void>() {
             boolean sessionGot=false;
             @Override
@@ -48,13 +48,13 @@ public class LoginFragment extends AppCompatActivity {
                 } else {
                     passwordTextInput.setError(null); // Clear the error
                     Intent i = new Intent(getBaseContext(), OrdersActivity.class);
-                    i.putExtra("username", Objects.requireNonNull(username.getText()).toString());
+                    i.putExtra("username",username.getText().toString());
                     startActivity(i);
                     finish();
                 }
             }
 
-        }.execute("http://10.0.2.2:8080/login?username="+ Objects.requireNonNull(username.getText()).toString()+"&password="+ Objects.requireNonNull(passwordEditText.getText()).toString());
+        }.execute("http://10.0.2.2:8080/login?username="+username.getText().toString()+"&password="+ passwordEditText.getText().toString());
 
     }
 
