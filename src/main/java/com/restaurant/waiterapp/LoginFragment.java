@@ -45,7 +45,6 @@ public class LoginFragment extends AppCompatActivity {
         final TextInputLayout passwordTextInput = findViewById(R.id.password_text_input);
         final TextInputEditText passwordEditText = findViewById(R.id.password_edit_text);
         final TextInputEditText username = findViewById(R.id.username);
-        // TODO: 17.01.2020 disable button if password or nickname is null
         new AsyncTask<String, Void, Void>() {
             boolean sessionGot=false;
             @Override
