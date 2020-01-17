@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.restaurant.waiterapp.apiconnection.ConnectionConfig.getConnectionConfig;
 import static com.restaurant.waiterapp.apiconnection.RequestsGet.getMenu;
 
 public class ExpandableListDataPump {
@@ -39,7 +40,7 @@ public class ExpandableListDataPump {
     static Map<String, List<String>> getData() {
         Map<String, List<String>> expandableListDetail = new HashMap<>();
 
-        Map<String, List<FoodResponse>> menu = getMenu("http://10.0.2.2:8080/api/waiter/menu");
+        Map<String, List<FoodResponse>> menu = getMenu(getConnectionConfig()+"/api/waiter/menu");
 
         foodObj = menu.get("DISH");
         Log.d("food", foodObj.toString());
