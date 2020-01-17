@@ -73,4 +73,7 @@ public class LoginFragment extends AppCompatActivity {
     }
 
 
+    public void onClickButtonExit(View view) {
+        finish();
+    }
 }

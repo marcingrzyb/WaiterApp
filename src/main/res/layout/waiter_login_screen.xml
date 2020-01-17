@@ -98,6 +98,7 @@
                 android:layout_marginRight="12dp"
                 android:layout_toStartOf="@id/next_button"
                 android:layout_toLeftOf="@id/next_button"
+                android:onClick="onClickButtonExit"
                 android:text="@string/button_cancel" />
 
         </RelativeLayout>
