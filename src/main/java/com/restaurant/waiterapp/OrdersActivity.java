@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.restaurant.waiterapp.apiconnection.ConnectionConfig.getConnectionConfig;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 public class OrdersActivity extends AppCompatActivity {
@@ -29,7 +30,7 @@ public class OrdersActivity extends AppCompatActivity {
     List<String> orders=new ArrayList<>();
     ArrayList<OrderResponse> ordersObj;
     ArrayAdapter<String> arrayAdapter;
-    String requestURLgetOrders="http://10.0.2.2:8080/api/waiter/tables";
+    String requestURLgetOrders=getConnectionConfig()+"/api/waiter/tables";
     @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

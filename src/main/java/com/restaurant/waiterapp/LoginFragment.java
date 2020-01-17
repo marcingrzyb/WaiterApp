@@ -15,6 +15,8 @@ import com.restaurant.waiterapp.apiconnection.RequestsPost;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 
+import static com.restaurant.waiterapp.apiconnection.ConnectionConfig.getConnectionConfig;
+
 
 public class LoginFragment extends AppCompatActivity {
     CookieManager cookieManager;
@@ -54,7 +56,7 @@ public class LoginFragment extends AppCompatActivity {
                 }
             }
 
-        }.execute("http://10.0.2.2:8080/login?username="+username.getText().toString()+"&password="+ passwordEditText.getText().toString());
+        }.execute(getConnectionConfig()+"/login?username="+username.getText().toString()+"&password="+ passwordEditText.getText().toString());
 
     }
 

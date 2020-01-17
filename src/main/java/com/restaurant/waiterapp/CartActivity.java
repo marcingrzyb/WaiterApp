@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.restaurant.waiterapp.apiconnection.ConnectionConfig.getConnectionConfig;
+
 public class CartActivity extends AppCompatActivity {
     private static final Logger LOGGER = Logger.getLogger( CartActivity.class.getName() );
     Cart cart;
@@ -80,7 +82,7 @@ public class CartActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "Sending failed Try Again", Toast.LENGTH_LONG).show();
                 }
             }
-        }.execute("http://10.0.2.2:8080/api/waiter/order",orderRequest);
+        }.execute(getConnectionConfig()+"/api/waiter/order",orderRequest);
 
     }
     public String prepareOrderRequest(Cart cart){

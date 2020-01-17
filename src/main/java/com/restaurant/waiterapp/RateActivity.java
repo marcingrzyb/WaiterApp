@@ -21,6 +21,8 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.restaurant.waiterapp.apiconnection.ConnectionConfig.getConnectionConfig;
+
 public class RateActivity extends AppCompatActivity {
     private static final Logger LOGGER = Logger.getLogger( RateActivity.class.getName() );
     Long orderid;
@@ -62,7 +64,7 @@ public class RateActivity extends AppCompatActivity {
                 result= RequestsPost.sendPost(strings[0], strings[1]);
                 return null;
             }
-        }.execute("http://10.0.2.2:8080/api/waiter/clientFeedback",feedbackPojo);
+        }.execute(getConnectionConfig()+"/api/waiter/clientFeedback",feedbackPojo);
 
     }
 
@@ -87,7 +89,7 @@ public class RateActivity extends AppCompatActivity {
                 result= RequestsPatch.patchRequest(strings[0]);
                 return null;
             }
-        }.execute("http://10.0.2.2:8080/api/waiter/finalize?orderId="+orderid.toString());
+        }.execute(getConnectionConfig()+"/api/waiter/finalize?orderId="+orderid.toString());
 
     }
     String prepareRequest(int dish,int bevarage,int service,Long orderid){

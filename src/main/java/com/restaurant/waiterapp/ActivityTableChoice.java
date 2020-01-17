@@ -15,6 +15,7 @@ import com.restaurant.waiterapp.apiconnection.RequestsPatch;
 
 import java.util.ArrayList;
 
+import static com.restaurant.waiterapp.apiconnection.ConnectionConfig.getConnectionConfig;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 
@@ -54,7 +55,7 @@ public class ActivityTableChoice extends AppCompatActivity {
                             startActivity(i);
                             finish();
                         }
-                    }.execute("http://10.0.2.2:8080/api/waiter/assign?reservationId="+ reservationid);
+                    }.execute(getConnectionConfig()+"/api/waiter/assign?reservationId="+ reservationid);
                 }else{
                     Toast.makeText(getBaseContext(), "empty reservation", Toast.LENGTH_LONG).show();
                 }
